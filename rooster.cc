@@ -1,5 +1,4 @@
 // Implementatie van klasse Rooster
-// hall
 
 #include <iostream>
 #include <fstream>
