@@ -1,4 +1,5 @@
 // Implementatie van klasse Rooster
+// test
 
 #include <iostream>
 #include <fstream>
