@@ -1,4 +1,5 @@
 // Implementatie van klasse Rooster
+//lisanne was hier
 
 #include <iostream>
 #include <fstream>
