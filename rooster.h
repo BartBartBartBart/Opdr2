@@ -3,6 +3,8 @@
 #ifndef RoosterHVar  // voorkom dat dit bestand meerdere keren
 #define RoosterHVar  // ge-include wordt
 
+#include "docent.h"
+#include "vak.h"
 #include "constantes.h"
 
 class Rooster
@@ -80,9 +82,11 @@ class Rooster
     // Post:
     // * rooster bevat een rooster voor alle ingelezen vakken.
     void bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen]);
-
+    
   private:
     // TODO: uw eigen memberfuncties en -variabelen
+    Docent docenten[MaxNrDocenten];
+    Vak vakken[MaxNrVakken];
 
     int nrDagen,       // aantal dagen in het rooster
         nrUrenPerDag,  // aantal uren per dag

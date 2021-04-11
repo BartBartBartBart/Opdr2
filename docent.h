@@ -1,17 +1,23 @@
 // Definitie van de klasse Docent
 
+#include "constantes.h"
 #ifndef DocentHVar  // voorkom dat dit bestand meerdere keren
 #define DocentHVar  // ge-include wordt
 
 class Docent
 { public:
-    Docent(itn nummer0, int uren0[], int aantalUren0);
+    Docent();
+    void setWaardes(int nummer0, int tijdsloten0[], int aantalTijdsloten0);
+    
+    int getNummer();
+    int getAantalTijdsloten();
+    int getTijdslot(int i);
 
   private:
     int nummer;
-    int aantalUren;
-    int uren[aantalUren];
+    int aantalTijdsloten;
+    int tijdsloten[MaxNrTijdsloten];
 
-}
+};
 
 #endif

@@ -1,19 +1,26 @@
 // Definitie van de klasse Vak
 
 #include <string>
-
+#include "constantes.h"
 #ifndef VakHVar  // voorkom dat dit bestand meerdere keren
 #define VakHVar  // ge-include wordt
 
 class Vak
 { public:
-     Vak(int docentNummer0, int tracks0[], int aantalTracks0, int naam0[], int n);
+     Vak();
+     void setWaardes(int docentNummer0, int tracks0[], int aantalTracks0, std::string naam0);
+     
+     std::string getNaam();
+     int getDocentNummer();
+     int getAantalTracks();
+     int getTrack(int i);
+
   private:
-    char naam[31];
+    std::string naam;
     int docentNummer; 
     int aantalTracks;
-    int tracks[aantalTracks];
+    int tracks[MaxNrTracks];
 
-}
+};
 
 #endif

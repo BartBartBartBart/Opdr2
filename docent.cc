@@ -2,12 +2,33 @@
 
 using namespace std;
 
-Docent::Docent (int nummer0, int uren0[], int aantalUren0)
+Docent::Docent ()
+{ 
+
+}
+
+void Docent::setWaardes (int nummer0, int tijdsloten0[], int aantalTijdsloten0)
 { int i;
   nummer = nummer0; 
-  aantalUren = aantalUren0;
+  aantalTijdsloten = aantalTijdsloten0;
 
-  for (i = 0; i < aantalUren; i++) {
-    uren[i] = uren0[i];
+  for (i = 0; i < aantalTijdsloten; i++) {
+    tijdsloten[i] = tijdsloten0[i];
   }
+
+}
+
+int Docent::getNummer () 
+{
+  return nummer;  
+}
+
+int Docent::getAantalTijdsloten ()
+{
+  return aantalTijdsloten;
+}
+
+int Docent::getTijdslot (int i) 
+{
+  return tijdsloten[i];
 }
