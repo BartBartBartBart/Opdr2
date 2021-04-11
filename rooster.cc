@@ -19,7 +19,7 @@ Rooster::Rooster ()
 
 bool Rooster::leesIn (const char* invoerNaam)
 {
-  // TODO: implementeer deze memberfunctie
+  
 
   return true;
 
