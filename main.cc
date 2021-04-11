@@ -12,6 +12,8 @@
 #include "constantes.h"
 #include "standaard.h"
 #include "rooster.h"
+#include "docent.h"
+#include "vak.h"
 using namespace std;
 const int MaxBestandsNaamLengte = 30; // maximale lengte van een bestandsnaam
 

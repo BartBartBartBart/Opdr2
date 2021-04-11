@@ -4,6 +4,9 @@
 #include <fstream>
 #include "standaard.h"
 #include "rooster.h"
+#include "docent.h"
+#include "vak.h"
+
 using namespace std;
 
 //*************************************************************************
