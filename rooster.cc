@@ -1,5 +1,5 @@
 // Implementatie van klasse Rooster
-//lisanne was hier
+//lisanne was hier en bart
 
 #include <iostream>
 #include <fstream>
