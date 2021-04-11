@@ -1,6 +1,6 @@
 // Implementatie van klasse Rooster
 //lisanne was hier en bart
-//alkjds
+// JE DOET HET VERKEERD
 
 #include <iostream>
 #include <fstream>
