@@ -32,3 +32,13 @@ int Docent::getTijdslot (int i)
 {
   return tijdsloten[i];
 }
+
+bool Docent::zitErin (int getal) 
+{ int i;
+  for (i = 0; i < aantalTijdsloten; i++) {
+    if (tijdsloten[i] == getal) {
+      return true;
+    }
+  }
+  return false;
+}

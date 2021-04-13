@@ -12,7 +12,8 @@ class Docent
     int getNummer();
     int getAantalTijdsloten();
     int getTijdslot(int i);
-
+    
+    bool zitErin (int getal);
   private:
     int nummer;
     int aantalTijdsloten;

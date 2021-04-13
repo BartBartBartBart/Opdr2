@@ -1,7 +1,4 @@
 // Implementatie van klasse Rooster
-//lisanne was hier en bart
-// JE DOET HET VERKEERD
-// hoppaaaaaaaaaaaaaa
 
 #include <iostream>
 #include <fstream>
@@ -103,8 +100,50 @@ void Rooster::drukAf ()
 
 bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                         long long &aantalDeelroosters)
-{
-  // TODO: implementeer deze memberfunctie
+{ int i= 0, j= 0;
+  int r, s;
+  bool ok = false;
+  while (rooster[i][j] != -1 && i < nrDagen * nrUrenPerDag) {
+    j++;
+    if (rooster[i][j] != -1) { 
+      i++;
+      j--;
+    }
+  }
+  
+  if (i >= nrDagen * nrUrenPerDag) {
+    return true;
+  }
+
+  while (!ok) {
+    for (r = 0; r < nrDocenten; r++) {
+      if (docenten[r].zitErin(i)) {
+        for (s = 0; s < nrVakken; s++){
+          if(docenten[r].getNummer() == vakken[s].getDocentNummer()) {
+            //hulpfuncties, mag dit?
+            rooster[i][j] = s;
+            if (bepaalRooster(rooster, aantalDeelroosters)){
+              ok = true;
+            }
+            else {
+              rooster[i][j] = -1;
+            }
+          }
+        }
+      }
+    }
+    //tussenuur
+    if (rooster[i][j] == -1) {
+      rooster[i][j] == 100;
+      if (bepaalRooster(rooster, aantalDeelroosters)){
+      ok = true;
+      }
+      else {
+        return false;
+      }
+    }
+  }
+  
 
   return true;
 
