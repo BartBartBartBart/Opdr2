@@ -24,6 +24,16 @@ void Vak::setWaardes(int docentNummer0, int tracks0[], int aantalTracks0, string
 
 }
 
+bool Vak::zelfdeTrack (int track)
+{ int i;
+  for (i = 0; i < aantalTracks; i++) {
+    if (tracks[i] == track) {
+      return true;
+    }
+  }
+  return false;
+}
+
 string Vak::getNaam () 
 {
   return naam;
