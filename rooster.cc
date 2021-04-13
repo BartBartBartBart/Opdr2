@@ -1,7 +1,4 @@
 // Implementatie van klasse Rooster
-//lisanne was hier en bart
-// JE DOET HET VERKEERD
-// hoppaaaaaaaaaaaaaa
 
 #include <iostream>
 #include <fstream>
