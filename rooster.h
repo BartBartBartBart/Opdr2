@@ -90,7 +90,8 @@ class Rooster
     // TODO: uw eigen memberfuncties en -variabelen
     Docent docenten[MaxNrDocenten];
     Vak vakken[MaxNrVakken];
-    
+    int vakkenPerTrack[MaxNrTracks];
+
     bool zelfdeDocent (int docent, Vak vak);
     void resetBool (bool A[], int n);
     void resetInt (int A[], int n);
