@@ -48,6 +48,12 @@ int keuzeUitMenu ()
 void menuVoorInstantie (Rooster *r1)
 { int keuze,
       rooster[MaxNrTijdsloten][MaxNrZalen];
+  int i, j;
+  for (i = 0; i < MaxNrTijdsloten; i++) {
+    for (j = 0; j < MaxNrZalen; j++) {
+      rooster[i][j] = -1;
+    }
+  }
   long long aantalDeelroosters;  // aantal deelroosters dat we hebben
                                  // opgebouwd
   clock_t t1, t2;

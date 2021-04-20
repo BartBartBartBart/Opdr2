@@ -14,6 +14,7 @@ class Vak
      int getDocentNummer();
      int getAantalTracks();
      int getTrack(int i);
+     bool zoekTrack(int track);
     
 
   private:

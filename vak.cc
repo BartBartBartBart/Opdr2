@@ -9,12 +9,7 @@ Vak::Vak ()
 
 void Vak::setWaardes(int docentNummer0, int tracks0[], int aantalTracks0, string naam0)
 { int i;
-  //for (i = 0; i < n; i++) {
-  //  naam[i] = naam0[i];  
-  //}
-  //cout << "HALLO" << endl;
   naam = naam0;
-  //cout << "DOEI" << endl;
   docentNummer = docentNummer0;
   aantalTracks = aantalTracks0;
   
@@ -42,4 +37,14 @@ int Vak::getAantalTracks ()
 int Vak::getTrack (int i)
 {
   return tracks[i];
+}
+
+bool Vak::zoekTrack (int track) 
+{ int i;
+  for (i = 0; i < aantalTracks; i++) {
+    if (tracks[i] == track) {
+      return true;
+    }
+  }
+  return false;
 }
