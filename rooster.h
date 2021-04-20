@@ -90,6 +90,7 @@ class Rooster
     // TODO: uw eigen memberfuncties en -variabelen
     Docent docenten[MaxNrDocenten];
     Vak vakken[MaxNrVakken];
+    //Vak tracks[MaxNrTracks][nrVakken];
     
     bool zelfdeDocent (int docent, Vak vak);
     void resetBool (bool A[], int n);
@@ -97,12 +98,14 @@ class Rooster
     bool zelfdeTrack (Vak A, Vak B);
     bool geeftAlCollege (int docent, int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool minUren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    bool aantalTussenuren ();
 
     int nrDagen,       // aantal dagen in het rooster
         nrUrenPerDag,  // aantal uren per dag
         nrZalen,       // aantal beschikbare zalen
         nrDocenten,
-        nrVakken;
+        nrVakken,
+        nrTracks;
 
       // Een datastructuur voor de docenten en hun beschikbaarheden.
       // En een datastructuur voor de vakken, met hun docenten en tracks.

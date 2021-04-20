@@ -14,7 +14,7 @@ using namespace std;
 
 // Default constructor
 Rooster::Rooster ()
-{ 
+{ nrTracks = 0;
   
 
 }  // default constructor
@@ -24,12 +24,14 @@ Rooster::Rooster ()
 bool Rooster::leesIn (const char* invoerNaam)
 { int i, j;
   ifstream fin;
+  bool tussenuurTracks[MaxNrTracks];
   int tijdsloten0[MaxNrTijdsloten];
   int aantalTijdsloten0;
   string naam0;
   int docentNummer0, aantalTracks0;
   int tracks0[MaxNrTracks];
-
+  
+  resetBool (tussenuurTracks, MaxNrTracks);
   fin.open (invoerNaam);
   if (fin.fail ()) {
     cout << invoerNaam << " kan ik niet openen." << endl;
@@ -53,6 +55,10 @@ bool Rooster::leesIn (const char* invoerNaam)
     fin >> docentNummer0 >> aantalTracks0;
     for (j = 0; j < aantalTracks0; j++) {
       fin >> tracks0[j];
+      if (tussenuurTracks[tracks0[j]] == false) {
+        tussenuurTracks[tracks0[j]] = true;
+        nrTracks++;
+      }
     }
     Vak vak;
     vak.setWaardes(docentNummer0, tracks0, aantalTracks0, naam0);
@@ -71,7 +77,8 @@ void Rooster::drukAf ()
        << "Aantal uren per dag: " << nrUrenPerDag << endl
        << "Aantal zalen: " << nrZalen << endl
        << "Aantal docenten " << nrDocenten << endl
-       << "Aantal vakken: " << nrVakken << endl << endl;
+       << "Aantal vakken: " << nrVakken << endl
+       << "Aantal tracks: " << nrTracks << endl << endl;
   
   for (i = 0; i < nrDocenten; i++) {
     cout << "Docent " << docenten[i].getNummer() << ":" << endl
@@ -121,8 +128,8 @@ void Rooster::resetInt (int A[], int n)
 
 bool Rooster::zelfdeTrack (Vak A, Vak B)
 { int i, j;
-  for(i == 0; i < A.getAantalTracks(); i++) {
-    for(j == 0; j < B.getAantalTracks(); j++) {
+  for(i = 0; i < A.getAantalTracks(); i++) {
+    for(j = 0; j < B.getAantalTracks(); j++) {
       if (A.getTrack(i) == B.getTrack(j)) {
         return true;
       }
@@ -171,6 +178,12 @@ bool Rooster::minUren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen])
   return true;
 }
 
+bool Rooster::aantalTussenuren ()
+{ //int i;
+  //for (i == 0; )
+  return false;
+}
+
 bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                         long long &aantalDeelroosters)
 { int i= 0, j= 0;
@@ -208,7 +221,7 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
             if (geeftAlCollege(vakken[s].getDocentNummer(), i, rooster)){
               cout << "Docent geeft al les vandaag." << endl;
             }
-            if (i == nrUrenPerDag - 1 && minUren(i, rooster)) {
+            if ((i + 1) % nrUrenPerDag == 0 && minUren(i, rooster)) {
               cout << "De studenten mogen niet voor 1 vak" 
                    << "naar de Universiteit komen" << endl;
             }
@@ -230,9 +243,9 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
     }
     //tussenuur
     if (rooster[i][j] == -1) {
-      rooster[i][j] == 100;
+      rooster[i][j] = 100;
       if (bepaalRooster(rooster, aantalDeelroosters)){
-      ok = true;
+        ok = true;
       }
       else {
         return false;
@@ -240,7 +253,6 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
     }
   }
   
-
   return true;
 
 }  // bepaalRooster
