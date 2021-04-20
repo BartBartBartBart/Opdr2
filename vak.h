@@ -15,7 +15,6 @@ class Vak
      int getAantalTracks();
      int getTrack(int i);
     
-     bool zelfdeTrack (int track);
 
   private:
     std::string naam;
