@@ -142,7 +142,6 @@ bool Rooster::zelfdeTrack (Vak A, Vak B)
 bool Rooster::geeftAlCollege(int docent, int tijdslot, int zaal,
                              int rooster[MaxNrTijdsloten][MaxNrZalen]) 
 { int dag = tijdslot / nrUrenPerDag;
-  cout << "Dag: " << dag  << " " << "docent " << docent << endl;
   int i, j;
   for (i = (dag * nrUrenPerDag); i <= tijdslot; i++) {
     for (j = 0; j < nrZalen; j++){
@@ -150,9 +149,7 @@ bool Rooster::geeftAlCollege(int docent, int tijdslot, int zaal,
         if (rooster[i][j] == -1) {
           cout << "foutje gevonden"; 
         }
-        cout << vakken[rooster[i][j]].getDocentNummer() << " en " << docent;
         if (rooster[i][j] != 100 && vakken[rooster[i][j]].getDocentNummer() == docent) {
-          //cout << "i en j = " << i << " " << j << endl;
           return true;
         }
       }
@@ -162,8 +159,7 @@ bool Rooster::geeftAlCollege(int docent, int tijdslot, int zaal,
 }
 
 bool Rooster::minUren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ cout << "hoi";
-  int dag = (tijdslot / nrUrenPerDag);
+{ int dag = (tijdslot / nrUrenPerDag);
   int i, j, z;
   int trackTeller[MaxNrTracks]; 
   resetInt (trackTeller, MaxNrTracks);
@@ -177,7 +173,7 @@ bool Rooster::minUren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen])
     }
   }
   for (i = 0; i < MaxNrTracks; i++){
-    if (trackTeller[i] == 1) {
+    if (trackTeller[i] == 1 && vakkenPerTrack[i] != 1) {
       return false;
     }
   }
@@ -248,19 +244,15 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
       j = 0;
     }
   }
-  cout << "i: " << i << "j: " << j;
   if (i >= nrDagen * nrUrenPerDag) {
-    //cout << "Return true" << endl;
     return true;
   }
   ok = false;
   while (!ok) {
     for (r = 0; r < nrDocenten; r++) {
-      cout << "Docentnummer " << r << endl;
       if (!ok) {
         if (docenten[r].zitErin(i)) {
           for (s = 0; s < nrVakken; s++){
-            //cout << "Vaknummer " << s << endl;
             if (!ok) {
               if(docenten[r].getNummer() == vakken[s].getDocentNummer() && 
                  !vakken[s].getIngeroosterd()) {
@@ -268,36 +260,35 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                 for (z = 0; z < nrZalen; z++) {
                   if (z != j && rooster[i][z] != -1 && rooster[i][z] != 100
                     && zelfdeTrack (vakken[s], vakken[rooster[i][z]])){
-                    cout << "Twee vakken van dezelfde track op 1 tijdstip." << endl;
+                    //cout << "Twee vakken van dezelfde track op 1 tijdstip." << endl;
                     goed = false;
                   }
                 }
                 if (geeftAlCollege(vakken[s].getDocentNummer(), i, j, rooster)){
-                  cout << "Docent geeft al les vandaag." << endl
-                       << "Docentnummer is " << r << endl;
+                  //cout << "Docent geeft al les vandaag." << endl
+                  //     << "Docentnummer is " << r << endl;
                   goed = false;
                 }
                 if (goed) {
                   rooster[i][j] = s;
-                  cout << " wordt ingeroosterd" << endl;
                   vakken[s].setIngeroosterd();
                   if ((i + 1) % nrUrenPerDag == 0 && j == (nrZalen - 1) && !minUren(i, rooster)) {
-                    cout << "De studenten mogen niet voor 1 vak "
-                         << "naar de Universiteit komen" << endl;
-                    //rooster[i][j] = -1;
+                    //cout << "De studenten mogen niet voor 1 vak "
+                    //     << "naar de Universiteit komen" << endl;
+                    rooster[i][j] = -1;
+                    vakken[s].setIngeroosterd();
                     goed = false;
                   }
-                  if ((i + 1) % nrUrenPerDag == 0 && !aantalTussenuren (i, rooster)) {
-                    cout << "Er zijn te veel tussenuren voor een Track" << endl;
-                    //rooster[i][j] = -1;
+                  if ((i + 1) % nrUrenPerDag == 0 && j == (nrZalen - 1) && !aantalTussenuren (i, rooster)) {
+                    //cout << "Er zijn te veel tussenuren voor een Track" << endl;
+                    rooster[i][j] = -1;
+                    vakken[s].setIngeroosterd();
                     goed = false;
                   }
                   if (goed && bepaalRooster(rooster, aantalDeelroosters)){
-                    //cout << "rooster is goed" << endl;
                     ok = true;
                   }
                   else {
-                    //cout << "Goed is fout, fuck.";
                     rooster[i][j] = -1;
                     vakken[s].setIngeroosterd();
                   }
@@ -312,19 +303,17 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
     if (!ok && rooster[i][j] == -1) {
       rooster[i][j] = 100;
       if ((i + 1) % nrUrenPerDag == 0 && j == (nrZalen - 1) && !minUren(i, rooster)) {
-        cout << "De studenten mogen niet voor 1 vak "
-             << "naar de Universiteit komen" << endl;
+        //cout << "De studenten mogen niet voor 1 vak "
+        //     << "naar de Universiteit komen" << endl;
         rooster[i][j] = -1;
         return false;
       }
-      if ((i + 1) % nrUrenPerDag == 0 && !aantalTussenuren (i, rooster)) {
-        cout << "Er zijn te veel tussenuren voor een Track" << endl;
+      if ((i + 1) % nrUrenPerDag == 0 && j == (nrZalen - 1) && !aantalTussenuren (i, rooster)) {
+        //cout << "Er zijn te veel tussenuren voor een Track" << endl;
         rooster[i][j] = -1;
         return false;
       }
-      //cout << " wordt tussenuur" << endl;
       if (bepaalRooster(rooster, aantalDeelroosters)){
-        // cout << "het eindelijke rooster is true" << endl;
         ok = true;
       }
       else {
@@ -340,7 +329,6 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
       } 
     } 
   }
-  // cout << "Return true" << endl;
   return true;
 
 }  // bepaalRooster
