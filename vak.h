@@ -15,6 +15,8 @@ class Vak
      int getAantalTracks();
      int getTrack(int i);
      bool zoekTrack(int track);
+     bool getIngeroosterd ();
+     void setIngeroosterd ();
     
 
   private:
@@ -22,6 +24,7 @@ class Vak
     int docentNummer; 
     int aantalTracks;
     int tracks[MaxNrTracks];
+    bool ingeroosterd;
 
 };
 

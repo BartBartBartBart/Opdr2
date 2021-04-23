@@ -4,7 +4,7 @@
 using namespace std;
 
 Vak::Vak ()
-{ 
+{ ingeroosterd = false;
 }
 
 void Vak::setWaardes(int docentNummer0, int tracks0[], int aantalTracks0, string naam0)
@@ -47,4 +47,18 @@ bool Vak::zoekTrack (int track)
     }
   }
   return false;
+}
+
+bool Vak::getIngeroosterd () 
+{
+  return ingeroosterd;
+}
+
+void Vak::setIngeroosterd ()
+{ if (ingeroosterd){
+    ingeroosterd = false;
+  }
+  else {
+    ingeroosterd = true;
+  }
 }
