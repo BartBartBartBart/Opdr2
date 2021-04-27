@@ -1,0 +1,144 @@
+3 5 3
+24
+6
+3 5 8 9 11 13
+9
+0 1 2 4 5 8 10 12 14
+10
+0 1 2 3 7 8 9 10 12 13
+6
+0 2 3 5 6 9
+12
+0 1 3 4 5 6 7 8 9 10 13 14
+7
+1 3 4 6 11 12 13
+6
+0 4 5 6 9 12
+9
+0 2 3 5 6 7 10 13 14
+8
+0 1 2 3 8 9 11 13
+10
+1 3 4 5 7 8 9 10 13 14
+11
+0 1 3 4 5 6 7 8 9 13 14
+10
+0 2 3 5 6 8 9 11 13 14
+11
+0 1 2 3 5 7 8 10 11 12 14
+13
+0 1 2 3 4 6 7 9 10 11 12 13 14
+7
+0 3 4 6 7 13 14
+9
+1 2 3 7 10 11 12 13 14
+11
+0 1 3 4 6 7 8 9 10 11 13
+12
+0 1 2 3 4 5 7 8 10 11 12 14
+7
+0 1 2 5 9 11 12
+4
+5 7 11 14
+9
+3 4 5 6 7 9 11 12 14
+12
+0 1 2 3 5 6 7 9 10 11 13 14
+11
+0 1 2 4 5 6 7 9 10 11 12
+7
+1 6 7 9 11 12 14
+31
+Algoritmiek
+0 2
+0 1
+LinearAlgebra2
+1 3
+0 1 7
+Databases
+2 4
+0 1 2 3
+IntroductiontoLogic
+3 4
+0 1 3 6
+ProgrammingTechniques
+4 1
+0
+IntroCognitiveScience
+5 1
+1
+Algorithms
+6 2
+2 3
+Gedragseconomie
+7 1
+2
+Marketing
+7 1
+2
+OrientatieIE
+8 1
+2
+Biochemie
+9 1
+3
+ChemievanLeven
+9 1
+3
+Complexity
+10 1
+4
+Computability
+0 1
+4
+KunstmatigeIntelligentie
+11 3
+4 6 7
+OperatingSystems
+12 1
+4
+ResearchMethodsCS
+13 3
+4 6 7
+StatisticsCS
+14 4
+4 5 6 7
+CognitiveRobotics
+5 1
+5
+HumanRobotInteraction
+15 1
+5
+IntroBehaviouralDS
+16 1
+5
+MachineLearning
+13 1
+5
+OnBeingaScientist
+17 2
+6 9
+RequirementsEngineering
+18 2
+6 8
+MoleculaireBiologie
+19 1
+7
+Bachelorproject
+11 2
+8 9
+ComputerNetworks
+20 1
+8
+DataScience
+21 1
+8
+ProgramCorrectness
+22 1
+8
+ReinforcementLearning
+23 1
+9
+CompationalLinguistics
+21 1
+9
