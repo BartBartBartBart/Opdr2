@@ -54,11 +54,11 @@ bool Vak::getIngeroosterd ()
   return ingeroosterd;
 }
 
-void Vak::setIngeroosterd ()
-{ if (ingeroosterd){
+void Vak::setIngeroosterd (int i)
+{ if (i == 0){
     ingeroosterd = false;
   }
-  else {
+  else if (i == 1) {
     ingeroosterd = true;
   }
 }

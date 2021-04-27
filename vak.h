@@ -16,7 +16,7 @@ class Vak
      int getTrack(int i);
      bool zoekTrack(int track);
      bool getIngeroosterd ();
-     void setIngeroosterd ();
+     void setIngeroosterd (int i);
     
 
   private:

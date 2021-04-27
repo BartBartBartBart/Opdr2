@@ -38,6 +38,7 @@ bool Rooster::leesIn (const char* invoerNaam)
     return false;
   }//if
   fin >> nrDagen >> nrUrenPerDag >> nrZalen;
+  nrTijdsloten = nrDagen * nrUrenPerDag;
   fin >> nrDocenten;
   for (i = 0; i < nrDocenten; i++) {
     fin >> aantalTijdsloten0;
@@ -232,7 +233,7 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
   bool ok = false;
   bool goed;
   aantalDeelroosters++;
-  while (rooster[i][j] != -1 && i < (nrDagen * nrUrenPerDag)) {
+  while (rooster[i][j] != -1 && i < nrTijdsloten) {
     while (j < (nrZalen - 1) && !ok) {
       j++; 
       if (rooster[i][j] == -1) { 
@@ -244,7 +245,12 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
       j = 0;
     }
   }
-  if (i >= nrDagen * nrUrenPerDag) {
+  if (i >= nrTijdsloten) {
+    for (s = 0; s < nrVakken; s++) {
+      if (!vakken[s].getIngeroosterd()) {
+        return false;
+      }
+    }
     return true;
   }
   ok = false;
@@ -271,18 +277,18 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                 }
                 if (goed) {
                   rooster[i][j] = s;
-                  vakken[s].setIngeroosterd();
+                  vakken[s].setIngeroosterd(1);
                   if ((i + 1) % nrUrenPerDag == 0 && j == (nrZalen - 1) && !minUren(i, rooster)) {
                     //cout << "De studenten mogen niet voor 1 vak "
                     //     << "naar de Universiteit komen" << endl;
                     rooster[i][j] = -1;
-                    vakken[s].setIngeroosterd();
+                    vakken[s].setIngeroosterd(0);
                     goed = false;
                   }
-                  if ((i + 1) % nrUrenPerDag == 0 && j == (nrZalen - 1) && !aantalTussenuren (i, rooster)) {
+                  if (goed && ((i + 1) % nrUrenPerDag == 0) && j == (nrZalen - 1) && !aantalTussenuren (i, rooster)) {
                     //cout << "Er zijn te veel tussenuren voor een Track" << endl;
                     rooster[i][j] = -1;
-                    vakken[s].setIngeroosterd();
+                    vakken[s].setIngeroosterd(0);
                     goed = false;
                   }
                   if (goed && bepaalRooster(rooster, aantalDeelroosters)){
@@ -290,7 +296,7 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                   }
                   else {
                     rooster[i][j] = -1;
-                    vakken[s].setIngeroosterd();
+                    vakken[s].setIngeroosterd(0);
                   }
                 }
               }
@@ -337,10 +343,18 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
 
 bool Rooster::bepaalMinRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                         long long &aantalDeelroosters)
-{
-  // TODO: implementeer deze memberfunctie
-
-  return true;
+{ int i;
+  nrTijdsloten = nrVakken / nrZalen;
+  while (nrTijdsloten <= nrUrenPerDag * nrDagen) {
+    for (i = 0; i < nrVakken; i++) {
+      vakken[i].setIngeroosterd(0);
+    }
+    if (bepaalRooster(rooster, aantalDeelroosters)) {
+      return true;
+    }
+    nrTijdsloten++;   
+  }
+  return false;
 
 }  // bepaalMinRooster
   

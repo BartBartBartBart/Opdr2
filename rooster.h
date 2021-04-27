@@ -105,7 +105,8 @@ class Rooster
         nrZalen,       // aantal beschikbare zalen
         nrDocenten,
         nrVakken,
-        nrTracks;
+        nrTracks,
+        nrTijdsloten;
 
       // Een datastructuur voor de docenten en hun beschikbaarheden.
       // En een datastructuur voor de vakken, met hun docenten en tracks.
