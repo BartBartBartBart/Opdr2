@@ -1,0 +1,67 @@
+2 5 3
+11
+4
+3 5 8 9
+6
+1 3 5 6 7 9
+5
+0 3 5 7 9
+7
+0 1 2 3 7 8 9
+6
+0 2 3 5 7 8
+3
+0 1 4
+9
+0 1 3 4 5 6 7 8 9
+6
+0 3 4 6 8 9
+4
+1 6 7 8
+5
+0 4 5 6 9
+4
+2 5 7 8
+14
+Algoritmiek
+0 2
+0 1
+LinearAlgebra2
+1 2
+0 1
+Databases
+2 4
+0 1 2 3
+IntroductiontoLogic
+3 3
+0 1 3
+ProgrammingTechniques
+4 1
+0
+IntroCognitiveScience
+5 1
+1
+Algorithms
+6 2
+2 3
+Gedragseconomie
+7 1
+2
+Marketing
+7 1
+2
+OrientatieIE
+8 1
+2
+Biochemie
+9 1
+3
+ChemievanLeven
+9 1
+3
+Complexity
+10 1
+4
+Computability
+0 1
+4
