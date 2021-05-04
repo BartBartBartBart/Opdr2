@@ -71,10 +71,20 @@ void menuVoorInstantie (Rooster *r1)
               cout << endl;
               if (keuze==1)
               { cout << "bepaalRooster" << endl;
+                for (i = 0; i < MaxNrTijdsloten; i++) {
+                  for (j = 0; j < MaxNrZalen; j++) {
+                    rooster[i][j] = -1;
+                  }
+                }
                 br = r1->bepaalRooster (rooster, aantalDeelroosters);
               }
               else
               { cout << "bepaalMinRooster" << endl;
+                for (i = 0; i < MaxNrTijdsloten; i++) {
+                  for (j = 0; j < MaxNrZalen; j++) {
+                    rooster[i][j] = -1;
+                  }
+                }
                 br = r1->bepaalMinRooster (rooster, aantalDeelroosters);
               }
 
@@ -93,6 +103,11 @@ void menuVoorInstantie (Rooster *r1)
               break;
       case 3: cout << endl;
               cout << "bepaalRoosterGretig" << endl;
+              for (i = 0; i < MaxNrTijdsloten; i++) {
+                for (j = 0; j < MaxNrZalen; j++) {
+                  rooster[i][j] = -1;
+                }
+              }
               r1 -> bepaalRoosterGretig (rooster);
               r1 -> drukAfRooster (rooster);
               break;

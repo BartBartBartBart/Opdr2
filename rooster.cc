@@ -501,6 +501,7 @@ void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen])
 { cout << "bepaalRoosterGretig" << endl;
   int i = 0, j = 0; 
   int r, s, k; 
+  int hulpi, hulpj;
   int trackTeller[MaxNrTracks];
   int tussenurenPerTrack[MaxNrTracks];
   bool ok = false; 
@@ -522,15 +523,22 @@ void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen])
   if (i >= nrTijdsloten) {
     return;
   }
+  hulpi = i;
+  hulpj = j;
+  cout << "i en j: " << i << " " << j << ", " << rooster[i][j] << endl;
   for (r = 0; r < nrDocenten; r++) {
+    cout << i << " " << j << endl;
     if (docenten[r].zitErin(i)) {
       for (s = 0; s < nrVakken; s++) {
+        cout << i << " " << j << endl;
         if (vakken[s].getDocentNummer() == docenten[r].getNummer() 
             && !vakken[s].getIngeroosterd()) {
+          cout << i << " " << j << endl;
           if (!geeftNuCollege(s, j, i, rooster) && !tweeZalenEenTrack(j, i, s, rooster)) {
             if(!geeftAlCollege(r, i, j, rooster)) {
               teller++;
             }
+            cout << i << " " << j << endl;
             if (!minUrenGretig(i, j, trackTeller, rooster)) {
               for (k = 0; k < MaxNrTracks; k++) {
                 if (trackTeller[k] == 1 && vakken[s].zoekTrack(k)) {
@@ -538,27 +546,38 @@ void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen])
                 }
               }
             }
+            cout << i << " " << j << endl;
             if (aantalTussenurenGretig(i, j, s, tussenurenPerTrack, rooster)) {
               teller++;
             }
           }
         }
+        cout << i << " " << j << endl;
         if (teller > grootste) {
           grootste = teller;
           besteVak = s;
         }
+        cout << i << " " << j << endl;
         teller = 0;
       }//for
+      cout << "rooster ervoor: " << i << " " << j << " " << rooster[i][j] << endl;
       if (grootste != -1 && !vakken[besteVak].getIngeroosterd()) {
         cout << "besteVak: " << besteVak << endl
              << "grootste: " << grootste << endl 
-             << "op " << i << ", " << j << endl;
-        rooster[i][j] = besteVak;
+             << "op " << i << ", " << j << endl;  
+        rooster[hulpi][hulpj] = besteVak;
         vakken[besteVak].setIngeroosterd(1);
       }
       else {
-        rooster[i][j] = 100;
+        cout << "i en j " << i << j << endl;
+        rooster[hulpi][hulpj] = 100;
       }
+      cout << "rooster erna: " << i << " " << j << " " << rooster[i][j] << endl;
+      bepaalRoosterGretig(rooster);
+    }
+    if (rooster[hulpi][hulpj] == -1) {
+      cout << "hulpi en hulpj (" << hulpi << ", " << hulpj << ")" << endl;
+      rooster[hulpi][hulpj] = 100;
       bepaalRoosterGretig(rooster);
     }
   } 
