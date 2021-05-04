@@ -223,6 +223,17 @@ bool Rooster::aantalTussenuren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNr
   return true;
 }
 
+bool Rooster::zalenSymmetrie (int tijdslot, int zaal, int vak, 
+                              int rooster[MaxNrTijdsloten][MaxNrZalen])
+{ int i;
+  for (i = 0; i < zaal; i++) {
+    if (rooster[tijdslot][i] != -1 && rooster[tijdslot][i] != 100 && rooster[tijdslot][i] >= vak) {
+      return false;
+    }
+  }
+  return true;
+}
+
 bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                         long long &aantalDeelroosters)
 { int i = 0, j = 0;
@@ -234,7 +245,12 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
     while (j < (nrZalen - 1) && !ok) {
       j++; 
       if (rooster[i][j] == -1) { 
-        ok = true;
+        if (rooster[i][0] == 100) {
+          j++;
+        }
+        else {
+          ok = true;
+        }
       }
     }
     if (!ok) {
@@ -258,7 +274,7 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
           for (s = 0; s < nrVakken; s++){
             if (!ok) {
               if(docenten[r].getNummer() == vakken[s].getDocentNummer() && 
-                 !vakken[s].getIngeroosterd()) {
+                 !vakken[s].getIngeroosterd() && zalenSymmetrie(i, j, s, rooster)){
                 goed = true;
                 for (z = 0; z < nrZalen; z++) {
                   if (z != j && rooster[i][z] != -1 && rooster[i][z] != 100

@@ -17,6 +17,9 @@ class Vak
      bool zoekTrack(int track);
      bool getIngeroosterd ();
      void setIngeroosterd (int i);
+     bool getTijdslot(int i);
+     void setTijdsloten(int tijdslot, int j);
+
     
 
   private:
@@ -25,6 +28,7 @@ class Vak
     int aantalTracks;
     int tracks[MaxNrTracks];
     bool ingeroosterd;
+    bool tijdsloten[MaxNrTijdsloten];
 
 };
 

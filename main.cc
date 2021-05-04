@@ -76,6 +76,7 @@ void menuVoorInstantie (Rooster *r1)
                     rooster[i][j] = -1;
                   }
                 }
+                aantalDeelroosters = 0;
                 br = r1->bepaalRooster (rooster, aantalDeelroosters);
               }
               else
@@ -85,6 +86,7 @@ void menuVoorInstantie (Rooster *r1)
                     rooster[i][j] = -1;
                   }
                 }
+                aantalDeelroosters = 0;
                 br = r1->bepaalMinRooster (rooster, aantalDeelroosters);
               }
 

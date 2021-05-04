@@ -5,6 +5,10 @@ using namespace std;
 
 Vak::Vak ()
 { ingeroosterd = false;
+  int i;
+  for (i = 0; i < MaxNrTijdsloten; i++) {
+    tijdsloten[i] = true;
+  }
 }
 
 void Vak::setWaardes(int docentNummer0, int tracks0[], int aantalTracks0, string naam0)
@@ -61,4 +65,19 @@ void Vak::setIngeroosterd (int i)
   else if (i == 1) {
     ingeroosterd = true;
   }
+}
+
+void Vak::setTijdsloten (int tijdslot, int j)
+{
+  if (j == 1) {
+    tijdsloten[tijdslot] = true;
+  }
+  else {
+    tijdsloten[tijdslot] = false;
+  }
+}
+
+bool Vak::getTijdslot(int i)
+{ 
+  return tijdsloten[i];
 }

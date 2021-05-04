@@ -106,6 +106,7 @@ class Rooster
     bool minUrenGretig (int tijdslot, int zaal, int trackTeller[], int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool aantalTussenurenGretig (int tijdslot, int zaal, int vak, int tussenurenPerTrack[MaxNrTracks],
                                  int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    bool zalenSymmetrie(int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
 
     int nrDagen,       // aantal dagen in het rooster
         nrUrenPerDag,  // aantal uren per dag
