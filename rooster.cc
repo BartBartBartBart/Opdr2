@@ -303,7 +303,7 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
       return false;
     }
     
-  }}
+  }
 
   for (s = 0; s < nrVakken; s++) {
     if (!vakken[s].getIngeroosterd()) {
