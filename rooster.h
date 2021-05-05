@@ -98,8 +98,8 @@ class Rooster
     bool zelfdeTrack (Vak A, Vak B);
     bool zelfdeTrackOpUur (int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool geeftAlCollege (int docent, int tijdslot, int zaal, int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    bool minUren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    bool aantalTussenuren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    bool minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    bool aantalTussenuren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool geeftNuCollege (int docent, int zaal, int tijdslot, 
                          int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool tweeZalenEenTrack (int zaal, int tijdslot, int vak,
