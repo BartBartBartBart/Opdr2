@@ -147,7 +147,7 @@ bool Rooster::geeftAlCollege(int docent, int tijdslot, int zaal,
   for (i = (dag * nrUrenPerDag); i <= tijdslot; i++) {
     for (j = 0; j < nrZalen; j++){
       if (i != tijdslot || (i == tijdslot && j < zaal)) {
-        if (rooster[i][j] != 100 && rooster[i][j] != -1 && vakken[rooster[i][j]].getDocentNummer() == docent) {
+        if (/*rooster[i][j] != 100 &&*/ rooster[i][j] != -1 && vakken[rooster[i][j]].getDocentNummer() == docent) {
           return true;
         }
       }
@@ -163,7 +163,7 @@ bool Rooster::minUren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen])
   resetInt (trackTeller, MaxNrTracks);
   for (i = (dag * nrUrenPerDag); i < ((dag+1) * nrUrenPerDag); i++) { 
     for (z = 0; z < nrZalen; z++){
-      if (rooster[i][z] != -1 && rooster[i][z] != 100) {
+      if (rooster[i][z] != -1 /*&& rooster[i][z] != 100*/) {
         for (j = 0; j < vakken[rooster[i][z]].getAantalTracks(); j++){
           trackTeller[vakken[rooster[i][z]].getTrack(j)]++;
         }
@@ -192,7 +192,7 @@ bool Rooster::aantalTussenuren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNr
         for (j = (dag * nrUrenPerDag); j < ((dag+1) * nrUrenPerDag); j++) {
           les = false;
           for (z = 0; z < nrZalen; z++){
-            if (rooster[j][z] != 100 && !eerste) {
+            if (rooster[j][z] != /*100*/ -1 && !eerste) {
               if (vakken[rooster[j][z]].zoekTrack(i)) {
                 eerste = true;
                 begin = j;
@@ -201,7 +201,7 @@ bool Rooster::aantalTussenuren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNr
           }
           if (eerste && j != begin) {
             for (z = 0; z < nrZalen; z++) {
-              if (rooster[j][z] != 100 && vakken[rooster[j][z]].zoekTrack(i)) {
+              if (/*rooster[j][z] != 100 &&*/ vakken[rooster[j][z]].zoekTrack(i)) {
                 les = true;
               }
             }
@@ -222,7 +222,7 @@ bool Rooster::aantalTussenuren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNr
   }
   return true;
 }
-
+/*
 bool Rooster::zalenSymmetrie (int tijdslot, int zaal, int vak, 
                               int rooster[MaxNrTijdsloten][MaxNrZalen])
 { int i;
@@ -235,11 +235,11 @@ bool Rooster::zalenSymmetrie (int tijdslot, int zaal, int vak,
   }
   return true;
 }
-
+*/
 bool Rooster::zelfdeTrackOpUur (int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen])
 { int j;
   for (j = 0; j < nrZalen; j++) {
-    if (j != zaal && rooster[tijdslot][j] != -1 && rooster[tijdslot][j] != 100) {
+    if (j != zaal && rooster[tijdslot][j] != -1 /*&& rooster[tijdslot][j] != 100*/) {
       if (zelfdeTrack(vakken[rooster[tijdslot][j]], vakken[vak])) {
         return true;
       }
@@ -261,27 +261,27 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
           for (i = 0; i < nrTijdsloten; i++) {
             for (j = 0; j < nrZalen; j++) {
               if (docenten[r].zitErin(i) && rooster[i][j] == -1) {
-        
-                if (!zelfdeTrackOpUur(i, j, s, rooster) && !geeftAlCollege(r, i, j, rooster)) {
-                  rooster[i][j] = s;
-                  vakken[s].setIngeroosterd(1);
-                  //cout << "vak " << s << "wordt ingeroosterd op (" << i << ", " << j << ")" << endl;
+                if (j == 0 || ((j > 0) && rooster[i][0] != -1)) {
+                  if (!zelfdeTrackOpUur(i, j, s, rooster) && !geeftAlCollege(r, i, j, rooster)) {
+                    rooster[i][j] = s;
+                    vakken[s].setIngeroosterd(1);
+                    //cout << "vak " << s << "wordt ingeroosterd op (" << i << ", " << j << ")" << endl;
 
-                  if (bepaalRooster(rooster, aantalDeelroosters)) {
-                    return true; 
+                    if (bepaalRooster(rooster, aantalDeelroosters)) {
+                      return true; 
+                    }
+                    else {
+                      //cout << "Vak " << s << " wordt weer van het rooster gehaald..." << endl;
+                      rooster[i][j] = -1;
+                      vakken[s].setIngeroosterd(0);
+                    } 
+
                   }
-                  else {
-                    //cout << "Vak " << s << " wordt weer van het rooster gehaald..." << endl;
-                    rooster[i][j] = -1;
-                    vakken[s].setIngeroosterd(0);
-                  } 
-
+                  //zalen symmetrie
+                  if (rooster[i][j] == -1) {
+                    break;
+                  }
                 }
-                //zalen symmetrie
-                if (rooster[i][j] == -1) {
-                  break;
-                }
-
               }
             }
           }
@@ -299,7 +299,7 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
         //     << "naar de Universiteit komen" << endl;
         return false;  
       }
-      if (((i + 1) % nrUrenPerDag == 0) && j == (nrZalen - 1) && !aantalTussenuren (i, rooster)) {
+      if ((i + 1) % nrUrenPerDag == 0 && j == (nrZalen - 1) && !aantalTussenuren (i, rooster)) {
         //cout << "Er zijn te veel tussenuren voor een Track" << endl;
         return false;
       }
@@ -313,13 +313,13 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
     }
   }
 
-  for (i = 0; i < nrTijdsloten; i++) {
-    for (j = 0; j < nrZalen; j++) {
-      if (rooster[i][j] == -1) {
-        rooster[i][j] = 100;
-      }
-    }
-  }
+  //for (i = 0; i < nrTijdsloten; i++) {
+  //  for (j = 0; j < nrZalen; j++) {
+  //    if (rooster[i][j] == -1) {
+  //      rooster[i][j] = 100;
+  //    }
+  //  }
+  //}
 
   return true;
 }
@@ -600,7 +600,7 @@ void Rooster::drukAfRooster (int rooster[MaxNrTijdsloten][MaxNrZalen])
     }
     cout << "Tijdslot " << i << ": " << endl;
     for (z = 0; z < nrZalen; z++) {
-      if (rooster[i][z] != 100) {
+      if (rooster[i][z] != /*100*/ -1) {
         cout << "Zaal: " << z << " | "
              << vakken[rooster[i][z]].getNaam() << " | "
              << "Docent: " << vakken[rooster[i][z]].getDocentNummer() << endl;
