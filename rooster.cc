@@ -178,9 +178,9 @@ bool Rooster::minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
   return true;
 }
 
-bool Rooster::aantalTussenuren (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen])
+bool Rooster::aantalTussenuren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
 { int i, j, z;
-  int dag = (tijdslot / nrUrenPerDag);
+  //int dag = (tijdslot / nrUrenPerDag);
   bool eerste = false;
   bool les;
   int tussenuur, teller, begin;
