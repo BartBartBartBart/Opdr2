@@ -86,30 +86,38 @@ class Rooster
     // * rooster bevat een rooster voor alle ingelezen vakken.
     void bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen]);
     
+    //wrapper functie voor resetVakkenPriv()
+    void resetVakken ();
+
   private:
     // TODO: uw eigen memberfuncties en -variabelen
     Docent docenten[MaxNrDocenten];
     Vak vakken[MaxNrVakken];
     int vakkenPerTrack[MaxNrTracks];
-
+    
+    void resetVakkenPriv ();
     bool zelfdeDocent (int docent, Vak vak);
     void resetBool (bool A[], int n);
     void resetInt (int A[], int n);
     bool zelfdeTrack (Vak A, Vak B);
     bool zelfdeTrackOpUur (int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool geeftAlCollege (int docent, int tijdslot, int zaal, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    bool trackHeeftEenDocent (int track);
     bool minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool aantalTussenuren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool dagIsOke (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool geeftNuCollege (int docent, int zaal, int tijdslot, 
                          int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    bool tweeZalenEenTrack (int zaal, int tijdslot, int vak,
-                            int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool minUrenGretig (int tijdslot, int zaal, int trackTeller[], int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool aantalTussenurenGretig (int tijdslot, int zaal, int vak, int tussenurenPerTrack[MaxNrTracks],
                                  int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool zalenSymmetrie(int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     int besteScore (int tijdslot, int zaal, int docent, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    void eersteLes (bool & eerste, int & begin, int track, int j,
+                    int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    void tweedeLes (int track, int j, bool & tweede, int & teller, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    void tweedeLesGretig (int tijdslot, int zaal, int vak, int track, int j, bool & tweede, int & teller,
+                    int rooster[MaxNrTijdsloten][MaxNrZalen]);
 
     int nrDagen,       // aantal dagen in het rooster
         nrUrenPerDag,  // aantal uren per dag

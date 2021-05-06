@@ -76,9 +76,7 @@ void menuVoorInstantie (Rooster *r1)
                     rooster[i][j] = -1;
                   }
                 }
-                for (i = 0; i < MaxNrVakken; i++) {
-                  r1->vakken[i].setIngeroosterd(0);
-                }
+                r1 -> resetVakken();
                 aantalDeelroosters = 0;
                 br = r1->bepaalRooster (rooster, aantalDeelroosters);
               }
@@ -90,6 +88,7 @@ void menuVoorInstantie (Rooster *r1)
                   }
                 }
                 aantalDeelroosters = 0;
+                r1 -> resetVakken();
                 br = r1->bepaalMinRooster (rooster, aantalDeelroosters);
               }
 
@@ -113,6 +112,7 @@ void menuVoorInstantie (Rooster *r1)
                   rooster[i][j] = -1;
                 }
               }
+              r1 -> resetVakken();
               r1 -> bepaalRoosterGretig (rooster);
               r1 -> drukAfRooster (rooster);
               break;
