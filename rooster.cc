@@ -38,7 +38,7 @@ bool Rooster::leesIn (const char* invoerNaam)
     cout << invoerNaam << " kan ik niet openen." << endl;
     return false;
   }//if
-  
+
   fin >> nrDagen >> nrUrenPerDag >> nrZalen;
   nrTijdsloten = nrDagen * nrUrenPerDag;
   fin >> nrDocenten;
@@ -178,6 +178,24 @@ bool Rooster::geeftAlCollege(int docent, int tijdslot, int zaal,
 
 }  // geeftAlCollege
 
+bool Rooster::trackHeeftEenDocent (int track) 
+{ int i;
+  int docent = -1;
+
+  for (i = 0; i < nrVakken; i++) {
+    if (vakken[i].zoekTrack(track) && docent == -1) {
+      docent = vakken[i].getDocentNummer();
+    }//if
+    else if (vakken[i].zoekTrack(track) 
+             && !zelfdeDocent(docent, vakken[i])) {
+      return false;
+    }//else if
+  }//for
+
+  return true;
+
+}  // trackHeeftEenDocent
+
 bool Rooster::minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
 { int i, j, z;
   int trackTeller[MaxNrTracks]; 
@@ -203,6 +221,10 @@ bool Rooster::minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
     if (trackTeller[i] == 1 && vakkenPerTrack[i] != 1) {
       return false;
     }//if
+    else if (trackTeller[i] == 1 && vakkenPerTrack[i] > 1 
+             && !trackHeeftEenDocent(i)) {
+      return false;
+    }
   }//for
 
   return true;
@@ -377,6 +399,7 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
 bool Rooster::bepaalMinRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                                 long long &aantalDeelroosters)
 { nrTijdsloten = nrVakken / nrZalen;
+
   if (nrVakken % nrZalen != 0) {
     nrTijdsloten++;
   }
@@ -384,12 +407,14 @@ bool Rooster::bepaalMinRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
     resetVakkenPriv();
    
     if (bepaalRooster(rooster, aantalDeelroosters)) {
+      nrTijdsloten = nrDagen * nrUrenPerDag;
       return true;
     }//if
     
     nrTijdsloten++;  
 
   }//while
+  nrTijdsloten = nrDagen * nrUrenPerDag;
 
   return false;
 
@@ -582,7 +607,6 @@ void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen])
   int beste,
       tijdslot,
       zaal;
-  resetVakkenPriv();
 
   for (s = 0; s < nrVakken; s++) {
     beste = -1;
