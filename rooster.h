@@ -100,6 +100,7 @@ class Rooster
     bool geeftAlCollege (int docent, int tijdslot, int zaal, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool aantalTussenuren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    bool dagIsOke (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool geeftNuCollege (int docent, int zaal, int tijdslot, 
                          int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool tweeZalenEenTrack (int zaal, int tijdslot, int vak,
