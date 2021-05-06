@@ -648,7 +648,7 @@ void Rooster::drukAfRooster (int rooster[MaxNrTijdsloten][MaxNrZalen])
 bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak, int tussenurenPerTrack[],
                                       int rooster[MaxNrTijdsloten][MaxNrZalen]) 
 { int i, j, z;
-  cout << "aantalTussenurenGretig" << endl;
+  //cout << "aantalTussenurenGretig" << endl;
   int dag = (tijdslot / nrUrenPerDag);
   bool eerste = false;
   bool les;
@@ -657,20 +657,20 @@ bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak, int tusse
   for (i = 0; i < MaxNrTracks; i++) {
     if(vakkenPerTrack[i] != 0){
       teller = 0;
-      cout << "hoi" << endl;
+      //cout << "hoi" << endl;
       if (vakkenPerTrack[i] != 1) {
-        cout << "doei" << endl;
+        //cout << "doei" << endl;
         for (j = (dag * nrUrenPerDag); j <= tijdslot; j++) {
-          cout << "why" << endl;
+          //cout << "why" << endl;
           les = false;
           for (z = 0; z < nrZalen; z++){
-            cout << "damn" << endl;
-            if (!(j == tijdslot && z >= zaal)) {
-              cout << "blub" << endl;
-              if (rooster[j][z] != 100 && !eerste) {
-                cout << "urghh" << endl;
+            //cout << "damn" << endl;
+            if (!(j == tijdslot && z == zaal)) {
+              //cout << "blub" << endl;
+              if (rooster[j][z] != -1 && !eerste) {
+                //cout << "urghh" << endl;
                 if (vakken[rooster[j][z]].zoekTrack(i)) {
-                  cout << "pff" << endl;
+                  //cout << "pff" << endl;
                   eerste = true;
                   begin = j;
                 }
@@ -679,12 +679,12 @@ bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak, int tusse
           }
           if (eerste && j != begin) {
             for (z = 0; z < nrZalen; z++) {
-              if (i < tijdslot || (i == tijdslot && z < zaal)) {
-                if (rooster[j][z] != 100 && vakken[rooster[j][z]].zoekTrack(i)) {
+              if (!(j == tijdslot && z >= zaal)) {
+                if (rooster[j][z] != -1 && vakken[rooster[j][z]].zoekTrack(i)) {
                   les = true;
                 }
               }
-              else if (rooster[j][z] != 100 && i == tijdslot && z == zaal && vakken[vak].zoekTrack(i)) {
+              else if (rooster[j][z] != -1 && i == tijdslot && z == zaal && vakken[vak].zoekTrack(i)) {
                 les = true;
               }
             }
@@ -712,14 +712,14 @@ bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak, int tusse
 
 bool Rooster::minUrenGretig (int tijdslot, int zaal, int trackTeller[],
                              int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ cout << "minUrenGretig" << endl;
+{ //cout << "minUrenGretig" << endl;
   int dag = (tijdslot / nrUrenPerDag);
   int i, j, z;
   resetInt (trackTeller, MaxNrTracks);
   for (i = (dag * nrUrenPerDag); i <= tijdslot; i++) { 
     for (z = 0; z < nrZalen; z++){
-      if(!(i == tijdslot && z >= zaal)) {
-        if (rooster[i][z] != -1 && rooster[i][z] != 100) {
+      if (!(i == tijdslot && z >= zaal)){   
+        if (rooster[i][z] != -1 ) {
           for (j = 0; j < vakken[rooster[i][z]].getAantalTracks(); j++){
             trackTeller[vakken[rooster[i][z]].getTrack(j)]++;
           }
@@ -738,10 +738,11 @@ bool Rooster::minUrenGretig (int tijdslot, int zaal, int trackTeller[],
 
 bool Rooster::geeftNuCollege(int docent, int zaal, int tijdslot, 
                              int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ cout << "geeftNuCollege" << endl;
+{ //cout << "geeftNuCollege" << endl;
   int j;
-  for (j = 0; j < zaal; j++){
-    if (rooster[tijdslot][j] != -1 && vakken[rooster[tijdslot][j]].getDocentNummer() == docent) {
+  for (j = 0; j < nrZalen; j++){
+    if (j != zaal && rooster[tijdslot][j] != -1 
+    && vakken[rooster[tijdslot][j]].getDocentNummer() == docent) {
       return true;
     }
   }
@@ -751,10 +752,11 @@ bool Rooster::geeftNuCollege(int docent, int zaal, int tijdslot,
 //aka twoGirlsOneCup
 bool Rooster::tweeZalenEenTrack (int zaal, int tijdslot, int vak,
                                  int rooster[MaxNrTijdsloten][MaxNrZalen]) 
-{ cout << "tweeZalenEenTrack" << endl;
+{ //cout << "tweeZalenEenTrack" << endl;
   int z;
   for (z = 0; z < zaal; z++) {
-    if (rooster[tijdslot][z] != -1 && zelfdeTrack (vakken[vak], vakken[rooster[tijdslot][z]])){
+    if (z != zaal && rooster[tijdslot][z] != -1 
+       && zelfdeTrack (vakken[vak], vakken[rooster[tijdslot][z]])){
       //cout << "Twee vakken van dezelfde track op 1 tijdstip." << endl;
       return true;
     }
@@ -855,6 +857,7 @@ int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak,
 { int teller = 0;
   int i;
   int trackTeller[MaxNrTracks];
+  int tussenurenPerTrack[MaxNrTracks];
   if (!geeftAlCollege(docent, tijdslot, zaal, rooster)) {
       teller++;
     }
@@ -865,29 +868,39 @@ int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak,
       }
     }
   }
+  if (aantalTussenurenGretig(tijdslot, zaal, vak, tussenurenPerTrack, rooster)) {
+    teller++;
+  }
 
   return teller;
 }
 
 void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen]) 
 { int i, j, r, s;
-  int beste = -1;
+  int beste ;
   int tijdslot;
   int zaal;
   //int trackTeller[MaxNrTracks];
   //int tussenurenPerTrack[MaxNrTracks];
   for (s = 0; s < nrVakken; s++) {
+      vakken[s].setIngeroosterd(0);
+    }
+  for (s = 0; s < nrVakken; s++) {
+    beste = -1;
+    tijdslot = -1;
+    zaal = -1;
     if (!vakken[s].getIngeroosterd()) {
       
       for (r = 0; r < nrDocenten; r++) {
-        if (vakken[s].getDocentNummer() == r) {
+        if (vakken[s].getDocentNummer() == r) {  
           
           for (i = 0; i < nrTijdsloten; i++) {
             for (j = 0; j < nrZalen; j++) {
               if (docenten[r].zitErin(i) && rooster[i][j] == -1) {
-                if (!geeftNuCollege(s, j, i, s, rooster) && !tweeZalenEenTrack(j, i, s, rooster)) {
+                if (!geeftNuCollege(r, j, i, rooster) && !tweeZalenEenTrack(j, i, s, rooster)) {
+                  //cout << "besteScore: " << besteScore(i, j, r, s, rooster) << endl;
                   if (besteScore(i, j, r, s, rooster) > beste){
-                    beste = besteScore(i, j, r, rooster);
+                    beste = besteScore(i, j, r, s, rooster);
                     tijdslot = i;
                     zaal = j; 
                   }
@@ -898,6 +911,9 @@ void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen])
         }
       }
     }
+    cout << "tijdslot: " << tijdslot << endl;
+    cout << "zaal: " << zaal << endl;
+    cout << "vak: " << s << endl;
     rooster[tijdslot][zaal] = s;
     vakken[s].setIngeroosterd(1);
   }
