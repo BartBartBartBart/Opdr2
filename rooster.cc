@@ -850,7 +850,7 @@ void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen])
 }  // bepaalRoosterGretig
 */
 
-int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak; 
+int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak, 
                          int rooster[MaxNrTijdsloten][MaxNrZalen]) 
 { int teller = 0;
   int i;
@@ -860,7 +860,7 @@ int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak;
     }
   if (!minUrenGretig(tijdslot, zaal, trackTeller, rooster)) {
     for (i = 0; i < MaxNrTracks; i++) {
-      if (trackTeller[i] == 1 && vakken[s].zoekTrack(i)) {
+      if (trackTeller[i] == 1 && vakken[vak].zoekTrack(i)) {
       teller++;
       }
     }
