@@ -76,9 +76,7 @@ void menuVoorInstantie (Rooster *r1)
                     rooster[i][j] = -1;
                   }
                 }
-                //for (i = 0; i < r1->nrVakken; i++) {
-                //  r1->vakken[i].setIngeroosterd(0);
-                //}
+                r1->resetVakken();
                 aantalDeelroosters = 0;
                 br = r1->bepaalRooster (rooster, aantalDeelroosters);
               }

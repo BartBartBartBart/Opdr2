@@ -86,12 +86,16 @@ class Rooster
     // * rooster bevat een rooster voor alle ingelezen vakken.
     void bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen]);
     
+    //wrapper functie voor resetVakkenPriv()
+    void resetVakken ();
+
   private:
     // TODO: uw eigen memberfuncties en -variabelen
     Docent docenten[MaxNrDocenten];
     Vak vakken[MaxNrVakken];
     int vakkenPerTrack[MaxNrTracks];
-
+    
+    void resetVakkenPriv ();
     bool zelfdeDocent (int docent, Vak vak);
     void resetBool (bool A[], int n);
     void resetInt (int A[], int n);
@@ -110,6 +114,10 @@ class Rooster
                                  int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool zalenSymmetrie(int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     int besteScore (int tijdslot, int zaal, int docent, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    void eersteLes (int tijdslot, int zaal, bool & eerste, int & begin, int i, int j,
+                    int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    void tweedeLes (int tijdslot, int zaal, int track, int j, bool & tweede, int & teller,
+                    int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
 
     int nrDagen,       // aantal dagen in het rooster
         nrUrenPerDag,  // aantal uren per dag
