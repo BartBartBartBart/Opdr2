@@ -1,4 +1,5 @@
 // Implementatie van standaard functies.
+// Lisanne Wallaard (s2865459), Bart den Boef (s2829452)
 
 #include <iostream>
 #include <cstdlib>  // voor rand

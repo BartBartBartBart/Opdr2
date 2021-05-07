@@ -1,4 +1,10 @@
 // Definitie van klasse Rooster
+// Makers: Lisanne Wallaard (s2865459), Bart den Boef (s2829452)
+// Vak: Algoritmiek
+// Tweede programmeeropdracht: Rooster
+// Studierichting: Kunstmatige Intelligentie
+// Jaar van aankomst: 2020
+// C++, 7.5.2021, GNU GCC Compiler
 
 #ifndef RoosterHVar  // voorkom dat dit bestand meerdere keren
 #define RoosterHVar  // ge-include wordt
@@ -86,41 +92,89 @@ class Rooster
     // * rooster bevat een rooster voor alle ingelezen vakken.
     void bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen]);
     
-  private:
-    // TODO: uw eigen memberfuncties en -variabelen
-    Docent docenten[MaxNrDocenten];
-    Vak vakken[MaxNrVakken];
-    int vakkenPerTrack[MaxNrTracks];
+    // Wrapper functie voor resetVakkenPriv()
+    void resetVakken ();
 
+  private:
+    
+    Docent docenten[MaxNrDocenten]; // array met alle docenten
+    Vak vakken[MaxNrVakken]; // array met alle vakken
+    int vakkenPerTrack[MaxNrTracks]; // array met het aantal vakken per track
+    
+    // Controleert of docent een vak geeft
     bool zelfdeDocent (int docent, Vak vak);
+
+    // 3 reset functies
     void resetBool (bool A[], int n);
     void resetInt (int A[], int n);
+    void resetVakkenPriv ();
+
+    // Controleert of vak A en B een gezamenlijke track bevatten
     bool zelfdeTrack (Vak A, Vak B);
-    bool zelfdeTrackOpUur (int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    bool geeftAlCollege (int docent, int tijdslot, int zaal, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Controleert of een docent al lesgeeft op een tijdslot
+    bool geeftAlCollege (int docent, int tijdslot, 
+                         int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Controleert of docenten van een track op dezelfde dag les kunnen geven
+    bool lesOpZelfdeDag (int track);
+
+    // Controleert of een track meer dan 1 docent heeft
+    bool trackHeeftEenDocent (int track);
+
+    // Controleert of een track niet maar 1 vak op een dag aanbiedt
     bool minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // 2 hulpfuncties voor aantalTussenuren
+    void eersteLes (bool & eerste, int & begin, int track, int tijdslot,
+                    int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    void tweedeLes (int track, int tijdslot, bool & tweede, int & teller, 
+                    int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Controleert of er geen track is met meer dan 1 tussenuur op een dag
     bool aantalTussenuren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Controleert of een track niet 2 vakken op 1 uur heeft
+    bool zelfdeTrackOpUur (int tijdslot, int zaal, int vak, 
+                           int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Hulpfunctie voor het backtracking-element
     bool dagIsOke (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Hulpfunctie voor aantalTussenurenGretig
+    void tweedeLesGretig (int tijdslot, int zaal, int vak, int track, 
+                          int j, bool & tweede, int & teller,
+                          int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Controleert het aantal tussenuren op een dag voor bepaalRoosterGretig
+    bool aantalTussenurenGretig (int tijdslot, int zaal, int vak, 
+                                 int tussenurenPerTrack[MaxNrTracks], 
+                                 int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Controleert het aantal uren dat een track aanbiedt op een dag
+    // voor bepaalRoosterGretig
+    bool minUrenGretig (int tijdslot, int trackTeller[], 
+                        int rooster[MaxNrTijdsloten][MaxNrZalen]);
+
+    // Controleert of een docent lesgeeft op een bepaald tijdstip
     bool geeftNuCollege (int docent, int zaal, int tijdslot, 
                          int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    bool tweeZalenEenTrack (int zaal, int tijdslot, int vak,
-                            int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    bool minUrenGretig (int tijdslot, int zaal, int trackTeller[], int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    bool aantalTussenurenGretig (int tijdslot, int zaal, int vak, int tussenurenPerTrack[MaxNrTracks],
-                                 int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    bool zalenSymmetrie(int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    int besteScore (int tijdslot, int zaal, int docent, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+                         
+    // Kijkt aan hoeveel voorwaardes een deelrooster voldoet 
+    // voor bepaalRoosterGretig
+    int besteScore (int tijdslot, int zaal, int docent, int vak, 
+                    int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    
+    
+    
 
     int nrDagen,       // aantal dagen in het rooster
         nrUrenPerDag,  // aantal uren per dag
         nrZalen,       // aantal beschikbare zalen
-        nrDocenten,
-        nrVakken,
-        nrTracks,
-        nrTijdsloten;
-
-      // Een datastructuur voor de docenten en hun beschikbaarheden.
-      // En een datastructuur voor de vakken, met hun docenten en tracks.
+        nrDocenten,    // aantal docenten
+        nrVakken,      // aantal vakken
+        nrTracks,      // aantal verschillende tracks
+        nrTijdsloten;  // aantal tijdsloten
 };
 
 #endif
