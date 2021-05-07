@@ -659,7 +659,11 @@ void Rooster::tweedeLesGretig (int tijdslot, int zaal, int vak, int track,
 
 //*************************************************************************
 
-// ??
+// Controleert of er op de desbetreffende dag niet een track is met meer 
+// dan 1 tussenuur. 'tijdslot' wordt gebruikt voor het berekenen van de dag. 
+// 'zaal' en 'vak' worden meegegeven aan tweedeLesGretig.
+// In tussenurenPerTrack[] wordt per track het aantal tussenuren opgeslagen.
+// 2D rooster wordt meegegeven aan eersteLes en tweedeLesGretig. 
 bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak, 
                                       int tussenurenPerTrack[],
                                       int rooster[MaxNrTijdsloten][MaxNrZalen]) 
@@ -674,35 +678,33 @@ bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak,
   resetInt(tussenurenPerTrack, MaxNrTracks);
 
   for (i = 0; i < MaxNrTracks; i++) {
-    if(vakkenPerTrack[i] != 0){
+    if(vakkenPerTrack[i] != 0 && vakkenPerTrack[i] != 1){
       teller = 0;
-      if (vakkenPerTrack[i] != 1) {
-        for (j = (dag * nrUrenPerDag); j <= tijdslot; j++) {
-          tweede = false;
-          
-          //Eerst een vak tegenkomen
-          eersteLes(eerste, begin, i, j, rooster);
+      for (j = (dag * nrUrenPerDag); j <= tijdslot; j++) {
+        tweede = false;
+        
+        //Eerst een vak tegenkomen
+        eersteLes(eerste, begin, i, j, rooster);
 
-          if (eerste && j != begin) {
+        if (eerste && j != begin) {
 
-            //Tweede vak tegenkomen
-            tweedeLesGretig(tijdslot, zaal, vak, i, j, tweede, teller, rooster);
+          //Tweede vak tegenkomen
+          tweedeLesGretig(tijdslot, zaal, vak, i, j, tweede, teller, rooster);
 
-          }//if
+        }//if
 
-          if (eerste && tweede) {  
-            tussenurenPerTrack[i] += teller;
-            teller = 0;
-          }//if
+        if (eerste && tweede) {  
+          tussenurenPerTrack[i] += teller;
+          teller = 0;
+        }//if
 
-        }//for
-        for (z = 0; z < MaxNrTracks; z++) {
-          if (tussenurenPerTrack[z] > 1) {
-            return false;
+      }//for
+      for (z = 0; z < MaxNrTracks; z++) {
+        if (tussenurenPerTrack[z] > 1) {
+          return false;
 
-          }//if
-        }//for
-      }//if
+        }//if
+      }//for
     }//if
   }//for
 
@@ -712,23 +714,33 @@ bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak,
 
 //*************************************************************************
 
-// ??
-bool Rooster::minUrenGretig (int tijdslot, int zaal, int trackTeller[],
+// Controleert of er een track is, die overeenkomt met de track van 
+// het vak dat je wilt plaatsen, met precies 1 vak op de huidige 
+// dag. 'tijdslot' wordt gebruikt om de dag te berekenen.
+// In de array trackTeller[] wordt opgeslagen hoevaak een track les heeft
+// op een dag. De functie retourneert:
+// - true, als er geen track is met precies 1 vak op de dag
+// - false, als er wel een track is met precies 1 vak op de dag
+bool Rooster::minUrenGretig (int tijdslot, int trackTeller[],
                              int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ int dag = (tijdslot / nrUrenPerDag);
-  int i, j, z; 
+{ int dag = (tijdslot / nrUrenPerDag), // de huidige dag
+      i, // for loop, loopt over tijdsloten
+      j, // loopt over tracks van een vak
+      z; // loopt over zalen
   resetInt (trackTeller, MaxNrTracks);
 
   for (i = (dag * nrUrenPerDag); i <= tijdslot; i++) { 
     for (z = 0; z < nrZalen; z++){     
-      if (!(i == tijdslot && z >= zaal)){          
-        if (rooster[i][z] != -1 ) {    
-          for (j = 0; j < vakken[rooster[i][z]].getAantalTracks(); j++){
-            trackTeller[vakken[rooster[i][z]].getTrack(j)]++; 
-          }//for
-        }//if
+         
+      if (rooster[i][z] != -1 ) {    
+
+        for (j = 0; j < vakken[rooster[i][z]].getAantalTracks(); j++){
+          trackTeller[vakken[rooster[i][z]].getTrack(j)]++; 
+        }//for
+
       }//if
-    }//fpr
+      
+    }//for
   }//for
 
   for (i = 0; i < MaxNrTracks; i++){
@@ -783,14 +795,15 @@ int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak,
   if (!geeftAlCollege(docent, tijdslot, rooster)) {
     teller++;
   }//if
-  if (!minUrenGretig(tijdslot, zaal, trackTeller, rooster)) {
+  if (!minUrenGretig(tijdslot, trackTeller, rooster)) {
     for (i = 0; i < MaxNrTracks; i++) {
       if (trackTeller[i] == 1 && vakken[vak].zoekTrack(i)) {
         teller++;
       }//if
     }//for
   }//if
-  if (aantalTussenurenGretig(tijdslot, zaal, vak, tussenurenPerTrack, rooster)) {
+  if (aantalTussenurenGretig(tijdslot, zaal, vak, 
+                             tussenurenPerTrack, rooster)) {
     teller++;
   }//if
 
