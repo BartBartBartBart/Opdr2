@@ -21,17 +21,22 @@ Rooster::Rooster ()
 
 //*************************************************************************
 
+// Leest de file in die meegegeven is in de header
+// Uit de file worden alle variabelen voor het rooster gehaald
 bool Rooster::leesIn (const char* invoerNaam)
-{ int i, j;
-  ifstream fin;
-  bool tussenuurTracks[MaxNrTracks];
-  int tijdsloten0[MaxNrTijdsloten];
-  int aantalTijdsloten0;
-  string naam0;
-  int docentNummer0, aantalTracks0;
-  int tracks0[MaxNrTracks];
+{ int i, j; // for loop
+  ifstream fin; // voor het inlezen van de file
+  bool verschillendeTracks[MaxNrTracks]; // om het aantal verschillende tracks 
+                                         // bij te houden
+  int tijdsloten0[MaxNrTijdsloten]; // de tijdsloten waarop
+                                    // een docent les kan geven
+  int aantalTijdsloten0; // aantal tijdsloten dat een docent les kan geven
+  string naam0; // naam van een vak
+  int docentNummer0, // nummer van docent
+      aantalTracks0; // aantal tracks dat een vak heeft
+  int tracks0[MaxNrTracks]; // array met de tracks die een vak heeft
   resetInt (vakkenPerTrack, MaxNrTracks);
-  resetBool (tussenuurTracks, MaxNrTracks);
+  resetBool (verschillendeTracks, MaxNrTracks);
 
   fin.open (invoerNaam);
   if (fin.fail ()) {
@@ -63,8 +68,8 @@ bool Rooster::leesIn (const char* invoerNaam)
       fin >> tracks0[j];
       vakkenPerTrack[tracks0[j]]++;
 
-      if (tussenuurTracks[tracks0[j]] == false) {
-        tussenuurTracks[tracks0[j]] = true;
+      if (verschillendeTracks[tracks0[j]] == false) {
+        verschillendeTracks[tracks0[j]] = true;
         nrTracks++;
       }//if
 
@@ -81,8 +86,9 @@ bool Rooster::leesIn (const char* invoerNaam)
 
 //*************************************************************************
 
+// Drukt alle ingelezen informatie van een rooster af naar het scherm
 void Rooster::drukAf ()
-{ int i, j;
+{ int i, j; // for loop
 
   cout << "Aantal dagen: " << nrDagen << endl
        << "Aantal uren per dag: " << nrUrenPerDag << endl
@@ -116,6 +122,9 @@ void Rooster::drukAf ()
 
 //*************************************************************************
 
+// checkt of 'docent' het meegegeven vak 'vak' geeft
+// - true, als de docent het vak geeft
+// - false, als dat niet zo is
 bool Rooster::zelfdeDocent (int docent, Vak vak) 
 { 
   if (docent == vak.getDocentNummer()) {
@@ -126,8 +135,11 @@ bool Rooster::zelfdeDocent (int docent, Vak vak)
 
 }  // zelfdeDocent
 
+//*************************************************************************
+
+// Zet alle waardes van een bool array op false
 void Rooster::resetBool (bool A[], int n)
-{ int i;
+{ int i; // for loop
 
   for (i = 0; i < n; i++){
     A[i] = false;
@@ -135,8 +147,11 @@ void Rooster::resetBool (bool A[], int n)
 
 }  // resetBool
 
+//*************************************************************************
+
+// Zet alle waardes van een int array op 0
 void Rooster::resetInt (int A[], int n)
-{ int i;
+{ int i; // for loop
 
   for (i = 0; i < n; i++){
     A[i] = 0;
@@ -144,13 +159,19 @@ void Rooster::resetInt (int A[], int n)
 
 }  // resetInt
 
+//*************************************************************************
+
+// Controleert of er een track is die in vak A en vak B voorkomt
+// - true, als er een gemeenschappelijke track is
+// - false, als dat niet zo is
 bool Rooster::zelfdeTrack (Vak A, Vak B)
-{ int i, j;
+{ int i, j; // for loop
 
   for (i = 0; i < A.getAantalTracks(); i++) {
     for (j = 0; j < B.getAantalTracks(); j++) {
       if (A.getTrack(i) == B.getTrack(j)) {
         return true;
+
       }//if
     }//for
   }//for
@@ -159,10 +180,17 @@ bool Rooster::zelfdeTrack (Vak A, Vak B)
 
 }  // zelfdeTrack
 
-bool Rooster::geeftAlCollege(int docent, int tijdslot, int zaal,
+//*************************************************************************
+
+// Controleert op het meegegeven 2D array 'rooster' of 'docent' al les geeft
+// op de huidige dag, 'tijdslot' wordt gebruikt om de huidige dag te berekenen.
+// De functie retourneert:
+// - true, als de docent al college geeft op de huidige dag
+// - false, als de docent nog geen college geeft op de huidige dag
+bool Rooster::geeftAlCollege(int docent, int tijdslot,
                              int rooster[MaxNrTijdsloten][MaxNrZalen]) 
 { int dag = tijdslot / nrUrenPerDag;
-  int i, j;
+  int i, j; // for loop
 
   for (i = (dag * nrUrenPerDag); i < ((dag+1) * nrUrenPerDag); i++) {
     for (j = 0; j < nrZalen; j++){
@@ -178,9 +206,15 @@ bool Rooster::geeftAlCollege(int docent, int tijdslot, int zaal,
 
 }  // geeftAlCollege
 
+//*************************************************************************
+
+// Controleert of een track meer dan 1 verschillende docent heeft
+// De functie retourneert:
+// - true, als er maar 1 docent is bij een track
+// - false, als een track meer dan 1 docent heeft
 bool Rooster::trackHeeftEenDocent (int track) 
-{ int i;
-  int docent = -1;
+{ int i; // for loop
+  int docent = -1; // onthoud welke docent we hebben gezien
 
   for (i = 0; i < nrVakken; i++) {
     if (vakken[i].zoekTrack(track) && docent == -1) {
@@ -189,12 +223,16 @@ bool Rooster::trackHeeftEenDocent (int track)
     else if (vakken[i].zoekTrack(track) 
              && !zelfdeDocent(docent, vakken[i])) {
       return false;
+
     }//else if
   }//for
 
   return true;
 
 }  // trackHeeftEenDocent
+
+//*************************************************************************
+
 
 bool Rooster::minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
 { int i, j, z;
@@ -220,16 +258,20 @@ bool Rooster::minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
   for (i = 0; i < MaxNrTracks; i++){
     if (trackTeller[i] == 1 && vakkenPerTrack[i] != 1) {
       return false;
+
     }//if
     else if (trackTeller[i] == 1 && vakkenPerTrack[i] > 1 
              && !trackHeeftEenDocent(i)) {
       return false;
+
     }
   }//for
 
   return true;
 
 }  // minUren
+
+//*************************************************************************
 
 void Rooster::tweedeLes (int track, int j, bool & tweede, int & teller,
                          int rooster[MaxNrTijdsloten][MaxNrZalen]) 
@@ -246,6 +288,8 @@ void Rooster::tweedeLes (int track, int j, bool & tweede, int & teller,
   }//if
   
 }  // tweedeLes
+
+//*************************************************************************
 
 bool Rooster::aantalTussenuren (int dag, 
                                 int rooster[MaxNrTijdsloten][MaxNrZalen])
@@ -279,6 +323,7 @@ bool Rooster::aantalTussenuren (int dag,
       }//for
       if (tussenuur > 1) {
         return false;
+
       }//if  
 
     }//if
@@ -288,6 +333,8 @@ bool Rooster::aantalTussenuren (int dag,
 
 }  // aantalTussenuren
 
+//*************************************************************************
+
 bool Rooster::zelfdeTrackOpUur (int tijdslot, int zaal, int vak, 
                                 int rooster[MaxNrTijdsloten][MaxNrZalen])
 { int j;
@@ -296,6 +343,7 @@ bool Rooster::zelfdeTrackOpUur (int tijdslot, int zaal, int vak,
     if (j != zaal && rooster[tijdslot][j] != -1) {
       if (zelfdeTrack(vakken[rooster[tijdslot][j]], vakken[vak])) {
         return true;
+
       }//if
     }//if
   }//for
@@ -303,6 +351,8 @@ bool Rooster::zelfdeTrackOpUur (int tijdslot, int zaal, int vak,
   return false; 
 
 }  // zelfdeTrackOpUur
+
+//*************************************************************************
 
 bool Rooster::dagIsOke (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]) 
 { int i, j;
@@ -312,22 +362,28 @@ bool Rooster::dagIsOke (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen])
     for (j = 0; j < nrZalen; j++) {
       if (rooster[i][j] == -1 && i < nrTijdsloten) {
         return true;
+
       }//if
     }//for
   }//for
   if (aantalTussenuren(dag, rooster) && minUren(dag, rooster)) {
     return true;
+
   }//if
 
   return false;
 
 }  // dagIsOke
 
+//*************************************************************************
+
 void Rooster::resetVakken ()
 {
   resetVakkenPriv();
 
 }  // resetVakken
+
+//*************************************************************************
 
 void Rooster::resetVakkenPriv () 
 { int i;
@@ -337,6 +393,8 @@ void Rooster::resetVakkenPriv ()
   }//for
 
 }  // resetVakkenPriv
+
+//*************************************************************************
 
 bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                              long long &aantalDeelroosters) 
@@ -354,28 +412,30 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
 
               if (docenten[r].zitErin(i) && rooster[i][j] == -1) {
                 if (!zelfdeTrackOpUur(i, j, s, rooster) 
-                    && !geeftAlCollege(r, i, j, rooster)) {
+                    && !geeftAlCollege(r, i, rooster)) {
                   rooster[i][j] = s;
                   vakken[s].setIngeroosterd(1);
                   
                   if (dagIsOke(i, rooster) 
                       && bepaalRooster(rooster, aantalDeelroosters)) {
                     return true; 
+
                   }//if
                   else {                      
                     rooster[i][j] = -1;
                     vakken[s].setIngeroosterd(0);
                   }//else
-
                 }//if
 
                 break;
+
               }//if
             }//for
           }//for
+
           if (!vakken[s].getIngeroosterd()) {
             return false;
-          }//ig
+          }//if
 
         }//if
       }//for
@@ -383,7 +443,7 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
   }//for
   for (i = 0; i < nrDagen; i++) {
     if (!minUren(i, rooster)) {
-      return false;  
+      return false; 
     }//if
     if (!aantalTussenuren (i, rooster)) {
       return false;
@@ -409,6 +469,7 @@ bool Rooster::bepaalMinRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
     if (bepaalRooster(rooster, aantalDeelroosters)) {
       nrTijdsloten = nrDagen * nrUrenPerDag;
       return true;
+
     }//if
     
     nrTijdsloten++;  
@@ -463,6 +524,8 @@ void Rooster::eersteLes (bool & eerste, int & begin, int track, int j,
 
 }  // eersteLes
 
+//*************************************************************************
+
 void Rooster::tweedeLesGretig (int tijdslot, int zaal, int vak, int track, 
                                int j, bool & tweede, int & teller,
                                int rooster[MaxNrTijdsloten][MaxNrZalen])
@@ -485,6 +548,8 @@ void Rooster::tweedeLesGretig (int tijdslot, int zaal, int vak, int track,
   }//if
 
 }  // tweedeLesGretig
+
+//*************************************************************************
 
 bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak, 
                                       int tussenurenPerTrack[],
@@ -522,6 +587,7 @@ bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak,
         for (z = 0; z < MaxNrTracks; z++) {
           if (tussenurenPerTrack[z] > 1) {
             return false;
+
           }//if
         }//for
       }//if
@@ -532,6 +598,7 @@ bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak,
 
 }  // aantalTussenUrenGretig
 
+//*************************************************************************
 
 bool Rooster::minUrenGretig (int tijdslot, int zaal, int trackTeller[],
                              int rooster[MaxNrTijdsloten][MaxNrZalen])
@@ -554,6 +621,7 @@ bool Rooster::minUrenGretig (int tijdslot, int zaal, int trackTeller[],
   for (i = 0; i < MaxNrTracks; i++){
     if (trackTeller[i] == 1 && vakkenPerTrack[i] != 1) {
       return false;
+
     }//if
   }//for
 
@@ -561,6 +629,7 @@ bool Rooster::minUrenGretig (int tijdslot, int zaal, int trackTeller[],
 
 }  // minUrenGretig
 
+//*************************************************************************
 
 bool Rooster::geeftNuCollege(int docent, int zaal, int tijdslot, 
                              int rooster[MaxNrTijdsloten][MaxNrZalen])
@@ -570,12 +639,15 @@ bool Rooster::geeftNuCollege(int docent, int zaal, int tijdslot,
     if (j != zaal && rooster[tijdslot][j] != -1 
         && vakken[rooster[tijdslot][j]].getDocentNummer() == docent) {
       return true;
+
     }//if
   }//for
 
   return false;
 
 }  // geeftNuCollege
+
+//*************************************************************************
 
 int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak, 
                          int rooster[MaxNrTijdsloten][MaxNrZalen]) 
@@ -584,7 +656,7 @@ int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak,
   int trackTeller[MaxNrTracks];
   int tussenurenPerTrack[MaxNrTracks];
 
-  if (!geeftAlCollege(docent, tijdslot, zaal, rooster)) {
+  if (!geeftAlCollege(docent, tijdslot, rooster)) {
       teller++;
   }//if
   if (!minUrenGretig(tijdslot, zaal, trackTeller, rooster)) {
@@ -601,6 +673,8 @@ int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak,
   return teller;
 
 }  // besteScore
+
+//*************************************************************************
 
 void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen]) 
 { int i, j, r, s;
