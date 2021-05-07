@@ -1,4 +1,5 @@
 // Enkele constantes die op verschillende plekken gebruikt kunnen worden.
+// Lisanne Wallaard (s2865459), Bart den Boef (s2829452)
 
 #ifndef ConstantesHVar  // voorkom dat dit bestand meerdere keren
 #define ConstantesHVar  // ge-include wordt

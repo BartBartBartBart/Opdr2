@@ -1,4 +1,5 @@
 // Defintie van standaard functies.
+// Lisanne Wallaard (s2865459), Bart den Boef (s2829452)
 
 #ifndef StandaardHVar  // om te voorkomen dat dit .h bestand meerdere keren
 #define StandaardHVar  // wordt ge-include 

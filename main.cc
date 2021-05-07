@@ -5,7 +5,7 @@
 // * een instantie van Rooster in te lezen, en daarvoor roosters te maken.
 //   (een geldig rooster, een zo kort mogelijk rooster, een gretig rooster)
 //
-// Naam student 1, naam student 2
+// Lisanne Wallaard (s2865459), Bart den Boef (s2829452)
 
 #include <iostream>
 #include <ctime>  // voor clock() en clock_t
@@ -16,6 +16,26 @@
 #include "vak.h"
 using namespace std;
 const int MaxBestandsNaamLengte = 30; // maximale lengte van een bestandsnaam
+
+//*************************************************************************
+
+//infoblokje van programma
+void infoBlokje ()
+{
+  cout << "Welkom bij de tweede programmeeropdracht van het vak Algoritmiek: "
+       << "Rooster." << endl
+       << "Gemaakt door: Lisanne Wallaard (s2865459) en "
+       << "Bart den Boef (s2829452)." << endl
+       << "Met dit programma kunt u op meerdere manieren een rooster "
+       << "opbouwen: met backtracking of op gretige wijze. " << endl
+       << "Bij bepaalRooster en bepaalMinRooster voldoet het rooster aan een"
+       << " aantal reeds gespecifieerde eisen. " << endl 
+       << "Bij bepaalRoosterGretig hoeft dit niet het geval te zijn." << endl
+       << "bepaalMinRooster bepaalt een rooster dat zo vroeg mogelijk in de "
+       << "week klaar is. " << endl
+       << endl;
+
+}  // infoblokje
 
 //*************************************************************************
 
@@ -76,9 +96,7 @@ void menuVoorInstantie (Rooster *r1)
                     rooster[i][j] = -1;
                   }
                 }
-                for (i = 0; i < MaxNrVakken; i++) {
-                  r1->vakken[i].setIngeroosterd(0);
-                }
+                r1 -> resetVakken();
                 aantalDeelroosters = 0;
                 br = r1->bepaalRooster (rooster, aantalDeelroosters);
               }
@@ -90,6 +108,7 @@ void menuVoorInstantie (Rooster *r1)
                   }
                 }
                 aantalDeelroosters = 0;
+                r1 -> resetVakken();
                 br = r1->bepaalMinRooster (rooster, aantalDeelroosters);
               }
 
@@ -113,6 +132,7 @@ void menuVoorInstantie (Rooster *r1)
                   rooster[i][j] = -1;
                 }
               }
+              r1 -> resetVakken();
               r1 -> bepaalRoosterGretig (rooster);
               r1 -> drukAfRooster (rooster);
               break;
@@ -163,7 +183,7 @@ void hoofdmenu ()
 //*************************************************************************
   
 int main ()
-{
+{ infoBlokje();
   hoofdmenu ();
 
   return 0;
