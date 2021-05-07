@@ -1,4 +1,10 @@
 // Implementatie van klasse Rooster
+// Makers: Lisanne Wallaard (s2865459), Bart den Boef (s2829452)
+// Vak: Algoritmiek
+// Tweede programmeeropdracht: Rooster
+// Studierichting: Kunstmatige Intelligentie
+// Jaar van aankomst: 2020
+// C++, 7.5.2021, GNU GCC Compiler
 
 #include <iostream>
 #include <fstream>
@@ -208,6 +214,48 @@ bool Rooster::geeftAlCollege(int docent, int tijdslot,
 
 //*************************************************************************
 
+// Controleert of de docenten van de meegegeven track wel op dezelfde dag les
+// kunnen geven.
+// - Retourneert true als de docenten op dezelfde dag les kunnen geven
+// - Retourneert false als dat niet het geval is
+bool Rooster::lesOpZelfdeDag (int track) 
+{ int i, j; // for loop
+  pair<bool,int> dagen[nrDagen]; // hulparray, .first wordt true als er een
+                                 // docent dan les kan geven, .seconde bevat
+                                 // desbetreffende docent
+  int docent; // hulpvar, voor de docent
+  int dag; // hulpvar, voor de dag
+  
+  for (i = 0; i < nrDagen; i++) {
+    dagen[i].first = false;
+    dagen[i].second = -1;
+  }//for
+
+  for (i = 0; i < nrVakken; i++) {
+    if (vakken[i].zoekTrack(track)) {
+      docent = vakken[i].getDocentNummer();
+
+      for (j = 0; j < docenten[docent].getAantalTijdsloten(); j++) {
+        dag = docenten[docent].getTijdslot(j) / nrUrenPerDag;
+
+        if (!dagen[dag].first) {
+          dagen[dag].first = true;
+          dagen[dag].second = docent;
+        }//if
+        else if (dagen[dag].first && dagen[dag].second != docent) {
+          return true;
+        }//else if
+
+      }//for
+    }//if
+  }//for
+
+  return false;
+
+}  // lesOpZelfdeDag
+
+//*************************************************************************
+
 // Controleert of een track meer dan 1 verschillende docent heeft
 // De functie retourneert:
 // - true, als er maar 1 docent is bij een track
@@ -233,10 +281,15 @@ bool Rooster::trackHeeftEenDocent (int track)
 
 //*************************************************************************
 
-
+// Controleert of er op de meegegeven dag, op het meegegeven rooster, een 
+// track is die op die dag maar 1 vak aanbiedt
+// retourneert:
+// - true, als er een track met maar 1 vak op die dag is
+// - false, als die er niet is
 bool Rooster::minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ int i, j, z;
-  int trackTeller[MaxNrTracks]; 
+{ int i, j, z; // for loop
+  int trackTeller[MaxNrTracks]; // array waarin het aantal vakken per track
+                                // op de dag wordt opgeslagen
   resetInt (trackTeller, MaxNrTracks);
 
   for (i = (dag * nrUrenPerDag); i < ((dag+1) * nrUrenPerDag); i++) { 
@@ -258,12 +311,10 @@ bool Rooster::minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
   for (i = 0; i < MaxNrTracks; i++){
     if (trackTeller[i] == 1 && vakkenPerTrack[i] != 1) {
       return false;
-
     }//if
     else if (trackTeller[i] == 1 && vakkenPerTrack[i] > 1 
-             && !trackHeeftEenDocent(i)) {
+             && !trackHeeftEenDocent(i) && lesOpZelfdeDag(i)) {
       return false;
-
     }
   }//for
 
@@ -273,12 +324,39 @@ bool Rooster::minUren (int dag, int rooster[MaxNrTijdsloten][MaxNrZalen])
 
 //*************************************************************************
 
-void Rooster::tweedeLes (int track, int j, bool & tweede, int & teller,
+// Hulpfunctie bij het checken van tussenuur: kijkt of we voor een 
+// gegeven track op een gegeven uur een les vinden van die track
+// 'eerste' wordt true als we een vak van 'track' tegenkomen, anders false
+// 'begin' wordt gebruikt om het tijdslot te onthouden waar eerste true werd
+// 'track' is de track waar voor de lessen gezocht worden
+// 'tijdslot' is het tijdslot waar gekeken wordt voor de lessen
+void Rooster::eersteLes (bool & eerste, int & begin, int track, int tijdslot,
+                         int rooster[MaxNrTijdsloten][MaxNrZalen])
+{ int z; // for loop
+
+  for (z = 0; z < nrZalen; z++){
+    if (rooster[tijdslot][z] != -1 && !eerste) {
+      if (vakken[rooster[tijdslot][z]].zoekTrack(track)) {
+        eerste = true;
+        begin = tijdslot;
+      }//if
+    }//if
+  }//for
+
+}  // eersteLes
+
+//*************************************************************************
+
+// Als hier geen les gevonden wordt, wordt de teller opgehoogd 
+// 'teller' zijn het aantal potentiele tussenuren
+// 'track' is de track waarvoor gekeken wordt, op tijdslot 'tijdslot'
+// 'tweede' wordt true als er een les gevonden wordt
+void Rooster::tweedeLes (int track, int tijdslot, bool & tweede, int & teller,
                          int rooster[MaxNrTijdsloten][MaxNrZalen]) 
-{ int z;
+{ int z; // for loop
 
   for (z = 0; z < nrZalen; z++) {
-    if (vakken[rooster[j][z]].zoekTrack(track)) {
+    if (vakken[rooster[tijdslot][z]].zoekTrack(track)) {
       tweede = true;
     }//if
   }//for
@@ -291,12 +369,19 @@ void Rooster::tweedeLes (int track, int j, bool & tweede, int & teller,
 
 //*************************************************************************
 
+// Controleert of er op de meegegeven dag 'dag' niet meer dan 1 tussenuur
+// voor een track is
+// De functie retourneert:
+// - true, als er niet meer dan 1 tussenuur per track op de dag is
+// - false, als er meer dan 1 tussenuur voor een track op de dag is
 bool Rooster::aantalTussenuren (int dag, 
                                 int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ int i, j;
-  bool eerste = false;
-  bool tweede = false;
-  int tussenuur, teller, begin = -1;
+{ int i, j; // for loop
+  bool eerste = false; // wordt true als er een eerste les tegen is gekomen
+  bool tweede = false; // wordt true als er een tweede les tegen is gekomen 
+  int tussenuur, // het aantal tussenuren voor een track
+      teller, // het aantal potentiële tussenuren
+      begin = -1; // hulpvariabele voor het onthouden van een tijdslot
 
   for (i = 0; i < MaxNrTracks; i++) {
     if(vakkenPerTrack[i] != 0 && vakkenPerTrack[i] != 1){
@@ -306,10 +391,10 @@ bool Rooster::aantalTussenuren (int dag,
         tweede = false;
         if (j < nrTijdsloten) {
           
-          //eerste les tegekomen
+          //eerste les tegenkomen
           eersteLes(eerste, begin, i, j, rooster);
           
-          //is er een tweede les
+          //tweede les tegengekomen
           if (eerste && j != begin) {
             tweedeLes(i, j, tweede, teller, rooster);
           }//if
@@ -335,9 +420,17 @@ bool Rooster::aantalTussenuren (int dag,
 
 //*************************************************************************
 
+// Controleert of er op het gegeven tijdslot geen vakken gegeven worden
+// die een track gemeenschappelijk hebben met 'vak'
+// 'tijdslot' is het tijdslot waarop gecontroleerd moet worden
+// op rooster['tijdslot']['zaal'] hoeft niet gecontroleerd te worden, want
+// daar wordt mogelijk het vak 'vak' geplaatst
+// De functie retourneert:
+// - true, als er een track is met twee vakken op dit uur
+// - false, als dit niet het geval is
 bool Rooster::zelfdeTrackOpUur (int tijdslot, int zaal, int vak, 
                                 int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ int j;
+{ int j; // for loop
 
   for (j = 0; j < nrZalen; j++) {
     if (j != zaal && rooster[tijdslot][j] != -1) {
@@ -354,9 +447,16 @@ bool Rooster::zelfdeTrackOpUur (int tijdslot, int zaal, int vak,
 
 //*************************************************************************
 
+// Controleert of de dag waarin de meegegeven 'tijdslot' al vol is.
+// als hij vol is, controleert hij het aantal tussenuren op die dag en 
+// of er niet een track is met maar 1 vak op die dag
+// de functie retourneert:
+// - true, als de dag nog niet vol is, of als hij vol is maar aan de 
+// voorwaarden voldoet
+// - false, als de dag vol is en niet voldoet aan de voorwaarden
 bool Rooster::dagIsOke (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen]) 
-{ int i, j;
-  int dag = tijdslot / nrUrenPerDag;
+{ int i, j; // for loop
+  int dag = tijdslot / nrUrenPerDag; // de dag waar tijdslot in valt
 
   for (i = (dag * nrUrenPerDag); i < ((dag + 1) * nrUrenPerDag); i++) {
     for (j = 0; j < nrZalen; j++) {
@@ -377,6 +477,7 @@ bool Rooster::dagIsOke (int tijdslot, int rooster[MaxNrTijdsloten][MaxNrZalen])
 
 //*************************************************************************
 
+// Wrapper functie, roept de prive functie resetVakkenPriv aan
 void Rooster::resetVakken ()
 {
   resetVakkenPriv();
@@ -385,8 +486,9 @@ void Rooster::resetVakken ()
 
 //*************************************************************************
 
+// Zet voor alle vakken de membervariabele ingeroosterd op false
 void Rooster::resetVakkenPriv () 
-{ int i;
+{ int i; // for loop
 
   for (i = 0; i < MaxNrVakken; i++) {
     vakken[i].setIngeroosterd(0);
@@ -396,9 +498,18 @@ void Rooster::resetVakkenPriv ()
 
 //*************************************************************************
 
+// Bepaalt een rooster, rekening houdend met de eisen zoals beschreven in de
+// opdracht. Het aantal bekeken deelroosters wordt bijgehouden in 
+// 'aantalDeelrooster'. De functie retourneert:
+// - true, als er een rooster gevonden is, dit wordt in de 2D array rooster 
+// gestopt
+// - false, als er geen rooster gevonden kan worden
 bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                              long long &aantalDeelroosters) 
-{ int i, j, r, s;
+{ int i, // for loop, tijdslot
+      j, // zaal
+      r, // docent
+      s; // vak
   aantalDeelroosters++;
 
   for (s = 0; s < nrVakken; s++) {
@@ -456,6 +567,12 @@ bool Rooster::bepaalRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
 
 //*************************************************************************
 
+// Bepaalt een minimaal rooster wat nog steeds aan de eisen voldoet
+// Het aantal bekeken deelroosters wordt bijgehouden in 'aantalDeelroosters'
+// De functie retourneert: 
+// - true, als er een rooster gevonden is, deze wordt opgeslagen in de 2D
+// array 'rooster'
+// - false, als er geen rooster gevonden is
 bool Rooster::bepaalMinRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
                                 long long &aantalDeelroosters)
 { nrTijdsloten = nrVakken / nrZalen;
@@ -483,8 +600,9 @@ bool Rooster::bepaalMinRooster (int rooster[MaxNrTijdsloten][MaxNrZalen],
   
 //*************************************************************************
 
+// Drukt het meegegeven rooster af naar het scherm
 void Rooster::drukAfRooster (int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ int i, j;
+{ int i, j; // for loop
 
   for (i = 0; i < (nrUrenPerDag * nrDagen); i++) {
     if (i % nrUrenPerDag == 0) {
@@ -509,27 +627,17 @@ void Rooster::drukAfRooster (int rooster[MaxNrTijdsloten][MaxNrZalen])
 
 //*************************************************************************
 
-void Rooster::eersteLes (bool & eerste, int & begin, int track, int j,
-                         int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ int z;
-
-  for (z = 0; z < nrZalen; z++){
-    if (rooster[j][z] != -1 && !eerste) {
-      if (vakken[rooster[j][z]].zoekTrack(track)) {
-        eerste = true;
-        begin = j;
-      }//if
-    }//if
-  }//for
-
-}  // eersteLes
-
-//*************************************************************************
-
+// Hulpfunctie voor het berekenen van de tussenuren voor het gretige algoritme
+// op tijdslot 'j' wordt gekeken of er een vak is wat een een track gelijk heeft
+// met meegegeven 'vak'
+// op rooster['tijdslot']['zaal'] hoeft niet gekeken te worden, hier wordt
+// mogelijk een vak geplaatst
+// als er een tweede vak gevonden is wordt 'tweede' true, en wordt de 
+// meegegeven teller opgehoofd, dit zijn de potentiële tussenuren
 void Rooster::tweedeLesGretig (int tijdslot, int zaal, int vak, int track, 
                                int j, bool & tweede, int & teller,
                                int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ int z;
+{ int z; // for loop
 
   for (z = 0; z < nrZalen; z++) {
     if (!(j == tijdslot && z == zaal)) {
@@ -551,14 +659,18 @@ void Rooster::tweedeLesGretig (int tijdslot, int zaal, int vak, int track,
 
 //*************************************************************************
 
+// ??
 bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak, 
                                       int tussenurenPerTrack[],
                                       int rooster[MaxNrTijdsloten][MaxNrZalen]) 
-{ int i, j, z;
-  int dag = (tijdslot / nrUrenPerDag);
-  bool eerste = false;
-  bool tweede;
-  int teller, begin;
+{ int i, // for loop, loopt over tracks
+      j, // loopt over tijdsloten
+      z, // loopt ook over tracks
+      dag = (tijdslot / nrUrenPerDag), // dag waar tijdslot in valt
+      teller, // aantal potentiele tussenuren
+      begin; // hulpvariabele voor waar de eerste les gevonden is
+  bool eerste = false; // wordt true als een eerste les gevonden is
+  bool tweede = false; // wordt true als er een tweede les gevonden is
   resetInt(tussenurenPerTrack, MaxNrTracks);
 
   for (i = 0; i < MaxNrTracks; i++) {
@@ -600,10 +712,11 @@ bool Rooster::aantalTussenurenGretig (int tijdslot, int zaal, int vak,
 
 //*************************************************************************
 
+// ??
 bool Rooster::minUrenGretig (int tijdslot, int zaal, int trackTeller[],
                              int rooster[MaxNrTijdsloten][MaxNrZalen])
 { int dag = (tijdslot / nrUrenPerDag);
-  int i, j, z;
+  int i, j, z; 
   resetInt (trackTeller, MaxNrTracks);
 
   for (i = (dag * nrUrenPerDag); i <= tijdslot; i++) { 
@@ -631,9 +744,15 @@ bool Rooster::minUrenGretig (int tijdslot, int zaal, int trackTeller[],
 
 //*************************************************************************
 
+// Controleert of de meegegeven docent les geeft op het meegegeven tijdslot
+// bij de meegegeven zaal hoeft niet gecontroleerd te worden, omdat hier
+// mogelijk een vak wordt geplaatst
+// De functie retourneert: 
+// - true, als de docent op dit uur college geeft
+// - false, als de docent op dit uur geen college geeft
 bool Rooster::geeftNuCollege(int docent, int zaal, int tijdslot, 
                              int rooster[MaxNrTijdsloten][MaxNrZalen])
-{ int j;
+{ int j; // for loop
 
   for (j = 0; j < nrZalen; j++){
     if (j != zaal && rooster[tijdslot][j] != -1 
@@ -649,15 +768,20 @@ bool Rooster::geeftNuCollege(int docent, int zaal, int tijdslot,
 
 //*************************************************************************
 
+// Berekent aan hoeveel voorwaardes het rooster zou voldoen, wanneer
+// het meegegeven vak met docent, op de meegegeven tijdslot en zaal zou
+// worden geplaatst
+// De score wordt geretourneerd 
 int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak, 
                          int rooster[MaxNrTijdsloten][MaxNrZalen]) 
-{ int teller = 0;
-  int i;
-  int trackTeller[MaxNrTracks];
-  int tussenurenPerTrack[MaxNrTracks];
+{ int teller = 0; // aan hoeveel voorwaardes voldoet dit deelrooster
+  int i; // for loop
+  int trackTeller[MaxNrTracks]; // hoevaak elke track op een dag voorkomt
+  int tussenurenPerTrack[MaxNrTracks]; // het aantal tussenuren per track
+                                       // op een dag
 
   if (!geeftAlCollege(docent, tijdslot, rooster)) {
-      teller++;
+    teller++;
   }//if
   if (!minUrenGretig(tijdslot, zaal, trackTeller, rooster)) {
     for (i = 0; i < MaxNrTracks; i++) {
@@ -676,11 +800,16 @@ int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak,
 
 //*************************************************************************
 
+// Bepaalt op gretige wijze een rooster, wat aan zoveel mogelijk voorwaarden
+// voldoet. Op elk punt wordt gekeken wat het beste deelrooster is, en die 
+// wordt gekozen
+// Als een vak ergens is neergezet, wordt deze keuze niet meer herzien
 void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen]) 
-{ int i, j, r, s;
-  int beste,
-      tijdslot,
-      zaal;
+{ int i, j, r, s; // for loop
+  int beste, // de score van het beste deelrooster
+      tijdslot, // hulpvariabele om het tijdslot te onthouden
+                // van het beste deelrooster
+      zaal; // hulpvariabele om de zaal te onthouden van het beste deelrooster
 
   for (s = 0; s < nrVakken; s++) {
     beste = -1;

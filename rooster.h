@@ -113,11 +113,12 @@ class Rooster
                                  int rooster[MaxNrTijdsloten][MaxNrZalen]);
     bool zalenSymmetrie(int tijdslot, int zaal, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     int besteScore (int tijdslot, int zaal, int docent, int vak, int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    void eersteLes (bool & eerste, int & begin, int track, int j,
+    void eersteLes (bool & eerste, int & begin, int track, int tijdslot,
                     int rooster[MaxNrTijdsloten][MaxNrZalen]);
-    void tweedeLes (int track, int j, bool & tweede, int & teller, int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    void tweedeLes (int track, int tijdslot, bool & tweede, int & teller, int rooster[MaxNrTijdsloten][MaxNrZalen]);
     void tweedeLesGretig (int tijdslot, int zaal, int vak, int track, int j, bool & tweede, int & teller,
                     int rooster[MaxNrTijdsloten][MaxNrZalen]);
+    bool lesOpZelfdeDag (int track);
 
     int nrDagen,       // aantal dagen in het rooster
         nrUrenPerDag,  // aantal uren per dag
