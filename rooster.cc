@@ -195,7 +195,11 @@ bool Rooster::zelfdeTrack (Vak A, Vak B)
 // - false, als de docent nog geen college geeft op de huidige dag
 bool Rooster::geeftAlCollege(int docent, int tijdslot,
                              int rooster[MaxNrTijdsloten][MaxNrZalen]) 
+<<<<<<< HEAD
 { int dag = tijdslot / nrUrenPerDag; 
+=======
+{ int dag = tijdslot / nrUrenPerDag; // de huidige dag
+>>>>>>> 5b57552b0c16b4e9f763b7b26823db5d5d046696
   int i, j; // for loop
 
   for (i = (dag * nrUrenPerDag); i < ((dag+1) * nrUrenPerDag); i++) {
@@ -500,7 +504,10 @@ void Rooster::resetVakkenPriv ()
 
 // Bepaalt een rooster, rekening houdend met de eisen zoals beschreven in de
 // opdracht. Het aantal bekeken deelroosters wordt bijgehouden in 
-// 'aantalDeelrooster'. De functie retourneert:
+// 'aantalDeelrooster'. 
+// Als een vak wordt ingeroosterd, wordt de membervariabele 'ingeroosterd' op
+// true gezet
+// De functie retourneert:
 // - true, als er een rooster gevonden is, dit wordt in de 2D array rooster 
 // gestopt
 // - false, als er geen rooster gevonden kan worden
@@ -816,6 +823,8 @@ int Rooster::besteScore (int tijdslot, int zaal, int docent, int vak,
 // Bepaalt op gretige wijze een rooster, wat aan zoveel mogelijk voorwaarden
 // voldoet. Op elk punt wordt gekeken wat het beste deelrooster is, en die 
 // wordt gekozen
+// Als een vak wordt ingeroosterd, wordt de membervariabele 'ingeroosterd' op
+// true gezet
 // Als een vak ergens is neergezet, wordt deze keuze niet meer herzien
 void Rooster::bepaalRoosterGretig (int rooster[MaxNrTijdsloten][MaxNrZalen]) 
 { int i, j, r, s; // for loop
