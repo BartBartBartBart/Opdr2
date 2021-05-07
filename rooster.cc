@@ -195,11 +195,8 @@ bool Rooster::zelfdeTrack (Vak A, Vak B)
 // - false, als de docent nog geen college geeft op de huidige dag
 bool Rooster::geeftAlCollege(int docent, int tijdslot,
                              int rooster[MaxNrTijdsloten][MaxNrZalen]) 
-<<<<<<< HEAD
-{ int dag = tijdslot / nrUrenPerDag; 
-=======
 { int dag = tijdslot / nrUrenPerDag; // de huidige dag
->>>>>>> 5b57552b0c16b4e9f763b7b26823db5d5d046696
+
   int i, j; // for loop
 
   for (i = (dag * nrUrenPerDag); i < ((dag+1) * nrUrenPerDag); i++) {
